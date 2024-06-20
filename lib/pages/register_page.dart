@@ -1,5 +1,5 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ride_share/components/my_button.dart';
 import 'package:ride_share/components/my_textfield.dart';
@@ -46,43 +46,43 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     // if password match
-    // else {
-    //   // try creating the user
-    //   try {
-    //     // creating user
-    //     UserCredential? userCredential = await FirebaseAuth.instance
-    //         .createUserWithEmailAndPassword(
-    //             email: emailController.text, password: passwordController.text);
+    else {
+      // try creating the user
+      try {
+        // creating user
+        UserCredential? userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: emailController.text, password: passwordController.text);
 
-    //     // create a user document and add to firestore
-    //     createUserDocument(userCredential);
+        // create a user document and add to firestore
+        createUserDocument(userCredential);
 
-    //     // pop loading circle
-    //     Navigator.pop(context);
-    //   } on FirebaseAuthException catch (e) {
-    //     // pop loading circle
-    //     Navigator.pop(context);
+        // pop loading circle
+        Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        // pop loading circle
+        Navigator.pop(context);
 
-    //     // display error
-    //     displayMessageToUser(e.code, context);
-    //   }
-    // }
+        // display error
+        displayMessageToUser(e.code, context);
+      }
+    }
   }
 
   // create a user document and collect them in firestore
-  // Future<void> createUserDocument(UserCredential? userCredential) async {
-  //   if (userCredential != null && userCredential.user != null) {
-  //     await FirebaseFirestore.instance
-  //         .collection("Users")
-  //         .doc(userCredential.user!.email)
-  //         .set(
-  //       {
-  //         'email': userCredential.user!.email,
-  //         'username': usernameController.text,
-  //       },
-  //     );
-  //   }
-  // }
+  Future<void> createUserDocument(UserCredential? userCredential) async {
+    if (userCredential != null && userCredential.user != null) {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(userCredential.user!.email)
+          .set(
+        {
+          'email': userCredential.user!.email,
+          'username': usernameController.text,
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

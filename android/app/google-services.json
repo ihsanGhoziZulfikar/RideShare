@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "761587132325",
+    "project_id": "maptestge",
+    "storage_bucket": "maptestge.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761587132325:android:e28d46083ff37ed111ea4c",
+        "android_client_info": {
+          "package_name": "com.ride_share.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbmKJz1RVg_qXyl2yAk3_V6UiZctL15V8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
