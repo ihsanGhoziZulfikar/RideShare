@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ride_share/auth/login_or_register.dart';
+import 'package:ride_share/pages/login_page.dart';
 import 'package:ride_share/theme/dark_mode.dart';
 import 'package:ride_share/theme/light_mode.dart';
 
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Placeholder(),
+      home: const LoginOrRegister(),
       theme: lightMode,
       darkTheme: darkMode,
       // routes: {
