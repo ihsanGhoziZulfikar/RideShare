@@ -66,6 +66,9 @@ flutter:
     - family: Kanit
       fonts:
         - asset: assets/fonts/Kanit-Regular.ttf
+    - family: KaiseiTokumin
+      fonts:
+        - asset: assets/fonts/KaiseiTokumin-Bold.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
