@@ -14,21 +14,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // // current user
-  // final User? currentUser = FirebaseAuth.instance.currentUser;
+  // current user
+  final User? currentUser = FirebaseAuth.instance.currentUser;
 
-  // // future to fetch user details
-  // Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
-  //   return await FirebaseFirestore.instance
-  //       .collection("Users")
-  //       .doc(currentUser!.email)
-  //       .get();
-  // }
+  // future to fetch user details
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
+    return await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(currentUser!.email)
+        .get();
+  }
 
-  // // sign user out
-  // void signOut() {
-  //   FirebaseAuth.instance.signOut();
-  // }
+  // sign user out
+  void signOut() {
+    FirebaseAuth.instance.signOut();
+  }
 
   @override
   // Widget build(BuildContext context) {
@@ -139,13 +139,26 @@ class _HomePageState extends State<HomePage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Hi, Zainudin',
-                                            style: TextStyle(
-                                              fontSize: 19,
-                                              fontFamily: 'Kanit',
-                                            ),
-                                          ),
+                                          FutureBuilder<
+                                                  DocumentSnapshot<
+                                                      Map<String, dynamic>>>(
+                                              future: getUserDetails(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.hasData) {
+                                                  Map<String, dynamic>? user =
+                                                      snapshot.data!.data();
+                                                  return Text(
+                                                    user!['username'] ??
+                                                        'Username not available',
+                                                    style: TextStyle(
+                                                      fontSize: 19,
+                                                      fontFamily: 'Kanit',
+                                                    ),
+                                                  );
+                                                } else {
+                                                  return const Text("No data");
+                                                }
+                                              }),
                                           Text(
                                             'Kamu ingin pergi ke mana?',
                                             style: TextStyle(
@@ -157,11 +170,14 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ),
                                     ),
-                                    CircleAvatar(
-                                      radius: 32,
-                                      backgroundImage: NetworkImage(
-                                          'https://plus.unsplash.com/premium_photo-1708275670170-f92d0c82a1d3?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                                          scale: 1.0),
+                                    GestureDetector(
+                                      onTap: signOut,
+                                      child: CircleAvatar(
+                                        radius: 32,
+                                        backgroundImage: NetworkImage(
+                                            'https://plus.unsplash.com/premium_photo-1708275670170-f92d0c82a1d3?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                                            scale: 1.0),
+                                      ),
                                     ),
                                   ],
                                 ),
