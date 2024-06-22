@@ -116,6 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 hintText: "Username",
                 obscureText: false,
                 controller: usernameController,
+                prefixIcon: Icon(Icons.email),
               ),
 
               const SizedBox(height: 10),
@@ -125,6 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 hintText: "Email",
                 obscureText: false,
                 controller: emailController,
+                prefixIcon: Icon(Icons.email),
               ),
 
               const SizedBox(height: 10),
@@ -134,6 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 hintText: "Password",
                 obscureText: true,
                 controller: passwordController,
+                prefixIcon: Icon(Icons.password),
               ),
 
               const SizedBox(height: 10),
@@ -143,6 +146,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 hintText: "Confirm Password",
                 obscureText: true,
                 controller: confirmController,
+                prefixIcon: Icon(Icons.password),
               ),
 
               const SizedBox(height: 10),

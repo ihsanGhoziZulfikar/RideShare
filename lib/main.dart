@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ride_share/auth/auth.dart';
 import 'package:ride_share/auth/login_or_register.dart';
 import 'package:ride_share/firebase_options.dart';
 import 'package:ride_share/pages/home_page.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginOrRegister(),
+      home: const AuthPage(),
       theme: lightMode,
       routes: {
         '/login_register_page': (context) => const LoginOrRegister(),
