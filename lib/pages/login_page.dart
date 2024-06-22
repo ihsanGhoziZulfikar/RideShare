@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           FractionallySizedBox(
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30.0),
+                const SizedBox(height: 50.0),
 
                 // white rounded box
                 Container(
@@ -128,9 +128,10 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 Column(
                                   children: [
-                                    const Text(
-                                      'Login',
-                                    ),
+                                    const Text('Login',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                        )),
                                     const SizedBox(
                                       height: 5.0,
                                     ),
@@ -147,7 +148,10 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ],
                                 ),
-                                const Text('Register'),
+                                const Text('Register',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    )),
                               ],
                             ),
                             const SizedBox(height: 10.0),
@@ -189,10 +193,20 @@ class _LoginPageState extends State<LoginPage> {
                                         });
                                       },
                                     ),
-                                    Text('Remember me'),
+                                    Text(
+                                      'Remember me',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                Text('Forgot Password'),
+                                Text(
+                                  'Forgot Password',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ],
                             ),
                           ],
