@@ -332,15 +332,18 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 25),
-          height: 60,
+          padding: EdgeInsets.only(
+            left: 25,
+            right: 25,
+            bottom: 10,
+          ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(40),
             child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               backgroundColor: Theme.of(context).colorScheme.primary,
               showSelectedLabels: false,
               showUnselectedLabels: false,
-              type: BottomNavigationBarType.fixed,
               items: [
                 BottomNavigationBarItem(
                   icon: Iconify(
