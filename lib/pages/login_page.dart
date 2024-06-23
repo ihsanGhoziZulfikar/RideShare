@@ -20,9 +20,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // text editing controller
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
 
+  String? emailError;
+  String? passwordError;
   bool rememberMe = false;
 
   void login() async {
@@ -46,7 +47,22 @@ class _LoginPageState extends State<LoginPage> {
     on FirebaseAuthException catch (e) {
       // pop loading
       Navigator.pop(context);
-      displayMessageToUser(e.code, context);
+
+      setState(() {
+        switch (e.code) {
+          case 'invalid-email':
+            emailError = e.code;
+            passwordError = null;
+            break;
+          case 'missing-password':
+            emailError = null;
+            passwordError = e.code;
+            break;
+          default:
+            emailError = null;
+            passwordError = e.code;
+        }
+      });
     }
   }
 
@@ -59,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
           FractionallySizedBox(
             alignment: Alignment.topCenter,
             widthFactor: 1,
-            heightFactor: 0.4,
+            heightFactor: 0.45,
             child: Container(
               height: 100,
               color: Theme.of(context).colorScheme.primary,
@@ -71,29 +87,36 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Ride Share
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ride Share',
-                          style: TextStyle(
-                            fontSize: 30,
+                Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ride Share',
+                            style: TextStyle(
+                              fontSize: 36,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w200,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Lorem ipsum dolor sit amet',
-                          style: TextStyle(
-                            fontSize: 15,
+                          Text(
+                            'Lorem ipsum dolor sit amet',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w100,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 50.0),
+                const SizedBox(height: 60.0),
 
                 // white rounded box
                 Container(
@@ -128,19 +151,25 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 Column(
                                   children: [
-                                    const Text('Login',
+                                    Text('Login',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w600,
                                         )),
                                     const SizedBox(
                                       height: 5.0,
                                     ),
                                     Container(
-                                      height: 5.0,
+                                      height: 3.0,
                                       width: 100.0,
                                       // color: Theme.of(context).colorScheme.background,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.black,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10.0),
                                         ),
@@ -148,10 +177,17 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ],
                                 ),
-                                const Text('Register',
+                                GestureDetector(
+                                  onTap: widget.onTap,
+                                  child: Text(
+                                    'Register',
                                     style: TextStyle(
-                                      color: Colors.black,
-                                    )),
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontSize: 25,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 10.0),
@@ -161,7 +197,14 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Email',
                               obscureText: false,
                               controller: emailController,
-                              prefixIcon: const Icon(Icons.email),
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.7),
+                              ),
+                              errorText: emailError, // Pass errorText
                             ),
                             const SizedBox(height: 10.0),
 
@@ -170,7 +213,14 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Password',
                               obscureText: true,
                               controller: passwordController,
-                              prefixIcon: const Icon(Icons.lock),
+                              prefixIcon: Icon(
+                                Icons.lock_outline,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.7),
+                              ),
+                              errorText: passwordError, // Pass errorText
                             ),
 
                             // remember me
@@ -180,12 +230,17 @@ class _LoginPageState extends State<LoginPage> {
                                 Row(
                                   children: [
                                     IconButton(
+                                      constraints: const BoxConstraints(
+                                          minWidth: 30, maxWidth: 30),
                                       color: Colors.black,
                                       icon: Icon(
                                         rememberMe
                                             ? Icons.check_box
                                             : Icons.check_box_outline_blank,
                                         size: 18.0,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -196,7 +251,10 @@ class _LoginPageState extends State<LoginPage> {
                                     Text(
                                       'Remember me',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ],
@@ -204,7 +262,9 @@ class _LoginPageState extends State<LoginPage> {
                                 Text(
                                   'Forgot Password',
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
