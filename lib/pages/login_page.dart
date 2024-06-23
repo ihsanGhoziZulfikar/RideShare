@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Ride Share
-                Padding(
+                const Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -120,11 +120,11 @@ class _LoginPageState extends State<LoginPage> {
 
                 // white rounded box
                 Container(
-                  height: 350,
+                  height: 380,
                   child: Stack(
                     children: [
                       Container(
-                        height: 330,
+                        height: 360,
                         padding: const EdgeInsets.all(15.0),
                         decoration: const BoxDecoration(
                           color: Colors.white,
@@ -303,85 +303,6 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-
-                // Icon(
-                //   Icons.person,
-                //   size: 80,
-                //   color: Theme.of(context).colorScheme.inversePrimary,
-                // ),
-
-                // const SizedBox(height: 25),
-
-                // // app name
-                // const Text(
-                //   "a p p   n a m e",
-                //   style: TextStyle(fontSize: 20),
-                // ),
-
-                // const SizedBox(height: 50),
-
-                // // email textfield
-                // MyTextField(
-                //   hintText: "Email",
-                //   obscureText: false,
-                //   controller: emailController,
-                // ),
-
-                // const SizedBox(height: 10),
-
-                // // password
-                // MyTextField(
-                //   hintText: "Password",
-                //   obscureText: true,
-                //   controller: passwordController,
-                // ),
-
-                // const SizedBox(height: 10),
-
-                // // forgot
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     Text(
-                //       "Forgot Password",
-                //       style: TextStyle(
-                //         color: Theme.of(context).colorScheme.inversePrimary,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-
-                // const SizedBox(height: 25),
-
-                // // sign in button
-                // MyButton(
-                //   text: "Login",
-                //   onTap: login,
-                // ),
-
-                // const SizedBox(height: 25),
-
-                // // register here
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Text(
-                //       "Don't have an account?",
-                //       style: TextStyle(
-                //         color: Theme.of(context).colorScheme.inversePrimary,
-                //       ),
-                //     ),
-                //     GestureDetector(
-                //       onTap: widget.onTap,
-                //       child: const Text(
-                //         "Register Here",
-                //         style: TextStyle(
-                //           fontWeight: FontWeight.bold,
-                //         ),
-                //       ),
-                //     )
-                //   ],
-                // )
               ],
             ),
           ),
