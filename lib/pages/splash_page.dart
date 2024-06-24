@@ -40,7 +40,7 @@ class _SplashPageState extends State<SplashPage> {
               child: Align(
             alignment: FractionalOffset.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 50.0),
+              padding: EdgeInsets.only(bottom: 50.0),
               child: Text(
                 'Let\'s Ride',
                 style: TextStyle(
