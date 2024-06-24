@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ride_share/components/my_navigation_bar.dart';
 import 'package:ride_share/pages/order_tracking_page.dart';
 import 'package:ride_share/auth/auth.dart';
 import 'package:ride_share/auth/login_or_register.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const AuthPage(),
+      // home: const AuthPage(),
+      home: const MyNavigationBar(),
       theme: lightMode,
       routes: {
         '/login_register_page': (context) => const LoginOrRegister(),
