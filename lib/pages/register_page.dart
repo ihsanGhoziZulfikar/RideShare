@@ -105,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (userCredential != null && userCredential.user != null) {
       await FirebaseFirestore.instance
           .collection("Users")
-          .doc(userCredential.user!.email)
+          .doc(userCredential.user!.uid)
           .set(
         {
           'email': userCredential.user!.email,
@@ -245,13 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               hintText: 'Username',
                               obscureText: false,
                               controller: usernameController,
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.7),
-                              ),
+                              prefixIcon: Icons.person,
                               errorText: usernameError, // Pass errorText
                             ),
                             const SizedBox(height: 10.0),
@@ -261,13 +255,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               hintText: 'Email',
                               obscureText: false,
                               controller: emailController,
-                              prefixIcon: Icon(
-                                Icons.email_outlined,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.7),
-                              ),
+                              prefixIcon: Icons.email_outlined,
                               errorText: emailError, // Pass errorText
                             ),
                             const SizedBox(height: 10.0),
@@ -277,13 +265,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               hintText: 'Password',
                               obscureText: true,
                               controller: passwordController,
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.7),
-                              ),
+                              prefixIcon: Icons.lock_outline,
                               errorText: passwordError, // Pass errorText
                             ),
                             const SizedBox(height: 10.0),
@@ -293,13 +275,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               hintText: 'Confirm Password',
                               obscureText: true,
                               controller: confirmController,
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.7),
-                              ),
+                              prefixIcon: Icons.lock_outline,
                               errorText: confirmPasswordError, // Pass errorText
                             ),
                           ],

@@ -195,13 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Email',
                               obscureText: false,
                               controller: emailController,
-                              prefixIcon: Icon(
-                                Icons.email_outlined,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.7),
-                              ),
+                              prefixIcon: Icons.email_outlined,
                               errorText: emailError, // Pass errorText
                             ),
                             const SizedBox(height: 10.0),
@@ -211,13 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Password',
                               obscureText: true,
                               controller: passwordController,
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.7),
-                              ),
+                              prefixIcon: Icons.lock_outline,
                               errorText: passwordError, // Pass errorText
                             ),
 

@@ -4,7 +4,7 @@ class MyTextField extends StatefulWidget {
   final String hintText;
   final bool obscureText;
   final TextEditingController controller;
-  final Icon prefixIcon;
+  final IconData prefixIcon;
   final String? errorText;
 
   const MyTextField({
@@ -55,7 +55,10 @@ class _MyTextFieldState extends State<MyTextField> {
             ),
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 5.0),
-              child: widget.prefixIcon,
+              child: Icon(
+                widget.prefixIcon,
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+              ),
             ),
             suffixIcon: widget.obscureText
                 ? Padding(

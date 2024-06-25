@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
     return await FirebaseFirestore.instance
         .collection("Users")
-        .doc(currentUser!.email)
+        .doc(currentUser!.uid)
         .get();
   }
 
