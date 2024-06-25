@@ -36,7 +36,11 @@ class ProfilePage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
                       'Akun',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
@@ -149,51 +153,165 @@ class ProfilePage extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 20,
+            height: 50,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25),
+            padding: EdgeInsets.symmetric(horizontal: 40),
             child: Column(
               children: [
-                Stack(
+                Row(
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Positioned(
-                          left: 0,
-                          bottom: 0,
-                          child: Container(
-                            height: 56,
-                            width: 56,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(360),
-                            ),
-                            child: Icon(
-                              Icons.notifications,
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 34,
+                    Container(
+                      height: 56,
+                      width: 56,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(360),
+                      ),
+                      child: Icon(
+                        Icons.notifications,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 34,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 15,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: 56,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Notification",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
-                        Positioned(
-                          top: 55,
-                          left: 90,
-                          right: 2,
-                          child: Container(
-                            width: 300,
-                            child: Divider(
-                              height: 1,
-                              thickness: 0.5,
-                              color: Colors.grey[500],
-                            ),
+                          SizedBox(
+                            height: 5,
                           ),
-                        ),
-                      ],
+                          Divider(
+                            height: 1,
+                            thickness: 0.5,
+                            color: Colors.grey[500],
+                          ),
+                        ],
+                      ),
                     ),
                   ],
-                )
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      height: 56,
+                      width: 56,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(360),
+                      ),
+                      child: Icon(
+                        Icons.settings,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 34,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 15,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: 56,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Settings",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Divider(
+                            height: 1,
+                            thickness: 0.5,
+                            color: Colors.grey[500],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      height: 56,
+                      width: 56,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(360),
+                      ),
+                      child: Icon(
+                        Icons.place_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 34,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 15,
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.55,
+                      height: 56,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Saved Places",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Divider(
+                            height: 1,
+                            thickness: 0.5,
+                            color: Colors.grey[500],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
