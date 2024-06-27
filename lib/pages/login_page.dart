@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:ride_share/components/my_button.dart';
 import 'package:ride_share/components/my_textfield.dart';
-import 'package:ride_share/helper/helper_functions.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -20,9 +18,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // text editing controller
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
 
+  String? emailError;
+  String? passwordError;
   bool rememberMe = false;
 
   void login() async {
@@ -46,7 +45,22 @@ class _LoginPageState extends State<LoginPage> {
     on FirebaseAuthException catch (e) {
       // pop loading
       Navigator.pop(context);
-      displayMessageToUser(e.code, context);
+
+      setState(() {
+        switch (e.code) {
+          case 'invalid-email':
+            emailError = e.code;
+            passwordError = null;
+            break;
+          case 'missing-password':
+            emailError = null;
+            passwordError = e.code;
+            break;
+          default:
+            emailError = null;
+            passwordError = e.code;
+        }
+      });
     }
   }
 
@@ -59,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
           FractionallySizedBox(
             alignment: Alignment.topCenter,
             widthFactor: 1,
-            heightFactor: 0.4,
+            heightFactor: 0.45,
             child: Container(
               height: 100,
               color: Theme.of(context).colorScheme.primary,
@@ -71,37 +85,44 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Ride Share
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ride Share',
-                          style: TextStyle(
-                            fontSize: 30,
+                const Padding(
+                  padding: const EdgeInsets.only(left: 20.0),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ride Share',
+                            style: TextStyle(
+                              fontSize: 36,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w200,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Lorem ipsum dolor sit amet',
-                          style: TextStyle(
-                            fontSize: 15,
+                          Text(
+                            'Lorem ipsum dolor sit amet',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w100,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 50.0),
+                const SizedBox(height: 60.0),
 
                 // white rounded box
                 Container(
-                  height: 350,
+                  height: 380,
                   child: Stack(
                     children: [
                       Container(
-                        height: 330,
+                        height: 360,
                         padding: const EdgeInsets.all(15.0),
                         decoration: const BoxDecoration(
                           color: Colors.white,
@@ -128,19 +149,25 @@ class _LoginPageState extends State<LoginPage> {
                               children: [
                                 Column(
                                   children: [
-                                    const Text('Login',
+                                    Text('Login',
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w600,
                                         )),
                                     const SizedBox(
                                       height: 5.0,
                                     ),
                                     Container(
-                                      height: 5.0,
+                                      height: 3.0,
                                       width: 100.0,
                                       // color: Theme.of(context).colorScheme.background,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.black,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10.0),
                                         ),
@@ -148,10 +175,17 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ],
                                 ),
-                                const Text('Register',
+                                GestureDetector(
+                                  onTap: widget.onTap,
+                                  child: Text(
+                                    'Register',
                                     style: TextStyle(
-                                      color: Colors.black,
-                                    )),
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      fontSize: 25,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 10.0),
@@ -161,7 +195,8 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Email',
                               obscureText: false,
                               controller: emailController,
-                              prefixIcon: const Icon(Icons.email),
+                              prefixIcon: Icons.email_outlined,
+                              errorText: emailError, // Pass errorText
                             ),
                             const SizedBox(height: 10.0),
 
@@ -170,7 +205,8 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Password',
                               obscureText: true,
                               controller: passwordController,
-                              prefixIcon: const Icon(Icons.lock),
+                              prefixIcon: Icons.lock_outline,
+                              errorText: passwordError, // Pass errorText
                             ),
 
                             // remember me
@@ -180,12 +216,17 @@ class _LoginPageState extends State<LoginPage> {
                                 Row(
                                   children: [
                                     IconButton(
+                                      constraints: const BoxConstraints(
+                                          minWidth: 30, maxWidth: 30),
                                       color: Colors.black,
                                       icon: Icon(
                                         rememberMe
                                             ? Icons.check_box
                                             : Icons.check_box_outline_blank,
                                         size: 18.0,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -196,7 +237,10 @@ class _LoginPageState extends State<LoginPage> {
                                     Text(
                                       'Remember me',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ],
@@ -204,7 +248,9 @@ class _LoginPageState extends State<LoginPage> {
                                 Text(
                                   'Forgot Password',
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
@@ -243,85 +289,6 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-
-                // Icon(
-                //   Icons.person,
-                //   size: 80,
-                //   color: Theme.of(context).colorScheme.inversePrimary,
-                // ),
-
-                // const SizedBox(height: 25),
-
-                // // app name
-                // const Text(
-                //   "a p p   n a m e",
-                //   style: TextStyle(fontSize: 20),
-                // ),
-
-                // const SizedBox(height: 50),
-
-                // // email textfield
-                // MyTextField(
-                //   hintText: "Email",
-                //   obscureText: false,
-                //   controller: emailController,
-                // ),
-
-                // const SizedBox(height: 10),
-
-                // // password
-                // MyTextField(
-                //   hintText: "Password",
-                //   obscureText: true,
-                //   controller: passwordController,
-                // ),
-
-                // const SizedBox(height: 10),
-
-                // // forgot
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.end,
-                //   children: [
-                //     Text(
-                //       "Forgot Password",
-                //       style: TextStyle(
-                //         color: Theme.of(context).colorScheme.inversePrimary,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-
-                // const SizedBox(height: 25),
-
-                // // sign in button
-                // MyButton(
-                //   text: "Login",
-                //   onTap: login,
-                // ),
-
-                // const SizedBox(height: 25),
-
-                // // register here
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Text(
-                //       "Don't have an account?",
-                //       style: TextStyle(
-                //         color: Theme.of(context).colorScheme.inversePrimary,
-                //       ),
-                //     ),
-                //     GestureDetector(
-                //       onTap: widget.onTap,
-                //       child: const Text(
-                //         "Register Here",
-                //         style: TextStyle(
-                //           fontWeight: FontWeight.bold,
-                //         ),
-                //       ),
-                //     )
-                //   ],
-                // )
               ],
             ),
           ),

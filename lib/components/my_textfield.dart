@@ -4,7 +4,8 @@ class MyTextField extends StatefulWidget {
   final String hintText;
   final bool obscureText;
   final TextEditingController controller;
-  final Icon prefixIcon;
+  final IconData prefixIcon;
+  final String? errorText;
 
   const MyTextField({
     super.key,
@@ -12,6 +13,7 @@ class MyTextField extends StatefulWidget {
     required this.obscureText,
     required this.controller,
     required this.prefixIcon,
+    this.errorText,
   });
 
   @override
@@ -29,33 +31,68 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      style: const TextStyle(color: Colors.black),
-      controller: widget.controller,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-        hintText: widget.hintText,
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: widget.prefixIcon,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        TextField(
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          controller: widget.controller,
+          decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(1)),
+                borderRadius: BorderRadius.circular(20)),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.7)),
+                borderRadius: BorderRadius.circular(20)),
+            hintText: widget.hintText,
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+              fontSize: 16,
+            ),
+            prefixIcon: Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 5.0),
+              child: Icon(
+                widget.prefixIcon,
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.7),
+              ),
+            ),
+            suffixIcon: widget.obscureText
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility : Icons.visibility_off,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                    ),
+                  )
+                : null,
+          ),
+          obscureText: _obscureText,
         ),
-        suffixIcon: widget.obscureText
-            ? Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
+        if (widget.errorText != null) // Add this line
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  widget.errorText!,
+                  style: TextStyle(color: Colors.red),
                 ),
-              )
-            : null,
-      ),
-      obscureText: _obscureText,
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
