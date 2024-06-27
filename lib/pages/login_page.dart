@@ -39,9 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       // await FirebaseAuth.instance.signInWithEmailAndPassword(
       //     email: emailController.text, password: passwordController.text);
-      UserCredential userCredential =
-          await _authService.signInWithEmailPassword(
-              emailController.text, passwordController.text);
+      UserCredential userCredential = await _authService.signInWithEmailPassword(emailController.text, passwordController.text);
       // pop loading
       if (context.mounted) Navigator.pop(context);
     } catch (e) {
@@ -147,8 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.grey,
                               spreadRadius: 0,
                               blurRadius: 3,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                              offset: Offset(0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -164,9 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                                   children: [
                                     Text('Login',
                                         style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                           fontSize: 25,
                                           fontWeight: FontWeight.w600,
                                         )),
@@ -178,9 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                                       width: 100.0,
                                       // color: Theme.of(context).colorScheme.background,
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                        color: Theme.of(context).colorScheme.primary,
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10.0),
                                         ),
@@ -193,8 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Text(
                                     'Register',
                                     style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
+                                      color: Theme.of(context).colorScheme.primary,
                                       fontSize: 25,
                                     ),
                                   ),
@@ -229,17 +221,12 @@ class _LoginPageState extends State<LoginPage> {
                                 Row(
                                   children: [
                                     IconButton(
-                                      constraints: const BoxConstraints(
-                                          minWidth: 30, maxWidth: 30),
+                                      constraints: const BoxConstraints(minWidth: 30, maxWidth: 30),
                                       color: Colors.black,
                                       icon: Icon(
-                                        rememberMe
-                                            ? Icons.check_box
-                                            : Icons.check_box_outline_blank,
+                                        rememberMe ? Icons.check_box : Icons.check_box_outline_blank,
                                         size: 18.0,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                        color: Theme.of(context).colorScheme.primary,
                                       ),
                                       onPressed: () {
                                         setState(() {
@@ -250,9 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Text(
                                       'Remember me',
                                       style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                        color: Theme.of(context).colorScheme.primary,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -261,8 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Text(
                                   'Forgot Password',
                                   style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -285,8 +269,7 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.grey,
                                       spreadRadius: 0,
                                       blurRadius: 2,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
+                                      offset: Offset(0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),

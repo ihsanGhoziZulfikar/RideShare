@@ -6,8 +6,8 @@ import 'package:ride_share/components/my_clipper_edge.dart';
 import 'package:ride_share/components/my_destination_card.dart';
 import 'package:ride_share/components/my_main_feature_option.dart';
 import 'package:ride_share/components/my_navigation_bar.dart';
-import 'package:ride_share/pages/driver_tracking.dart';
-import 'package:ride_share/pages/order_tracking_page.dart';
+import 'package:ride_share/pages/guest_page.dart';
+import 'package:ride_share/pages/driver_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,6 +26,16 @@ class _HomePageState extends State<HomePage> {
         .collection("Users")
         .doc(currentUser!.uid)
         .get();
+  }
+
+  // update user status
+  Future<void> updateUserStatus(String status) async {
+    await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(currentUser!.uid)
+        .update({
+      'status': status,
+    });
   }
 
   @override
@@ -319,16 +329,12 @@ class _HomePageState extends State<HomePage> {
                             iconSize: 70,
                             label: "Driver",
                             color: Color(0xFF90E0EF),
-                            onTap: () {
+                            onTap: () async {
+                              await updateUserStatus("driver");
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OrderTrackingPage()),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Kamu sudah menjadi driver"),
-                                ),
+                                    builder: (context) => DriverPage()),
                               );
                             },
                           ),
@@ -338,15 +344,12 @@ class _HomePageState extends State<HomePage> {
                             iconSize: 65,
                             label: 'Guest',
                             color: Color(0xFF00B4D8),
-                            onTap: () {
+                            onTap: () async {
+                              await updateUserStatus("guest");
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OrderTrackingPage()),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Kamu sudah menjadi guest"),
+                                  builder: (context) => GuestPage(),
                                 ),
                               );
                             },

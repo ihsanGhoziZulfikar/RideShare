@@ -5,7 +5,7 @@ import 'package:ride_share/pages/history_page.dart';
 import 'package:ride_share/pages/profile_page.dart';
 import 'package:ride_share/pages/splash_page.dart';
 import 'package:ride_share/components/my_navigation_bar.dart';
-import 'package:ride_share/pages/order_tracking_page.dart';
+import 'package:ride_share/pages/driver_page.dart';
 import 'package:ride_share/services/auth/auth.dart';
 import 'package:ride_share/services/auth/login_or_register.dart';
 import 'package:ride_share/firebase_options.dart';
