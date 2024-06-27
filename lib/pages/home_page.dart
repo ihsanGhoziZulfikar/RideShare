@@ -156,7 +156,8 @@ class _HomePageState extends State<HomePage> {
                                                   Map<String, dynamic>? user =
                                                       snapshot.data!.data();
                                                   return Text(
-                                                    user!['username'] ??
+                                                    "Hi, " +
+                                                            user!['username'] ??
                                                         'Username not available',
                                                     style: TextStyle(
                                                       fontSize: 19,
