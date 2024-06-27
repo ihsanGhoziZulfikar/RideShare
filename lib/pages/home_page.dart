@@ -5,6 +5,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:ride_share/components/my_clipper_edge.dart';
 import 'package:ride_share/components/my_destination_card.dart';
 import 'package:ride_share/components/my_main_feature_option.dart';
+import 'package:ride_share/pages/driver_tracking.dart';
 import 'package:ride_share/pages/order_tracking_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -135,22 +136,22 @@ class _HomePageState extends State<HomePage> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                                              future: getUserDetails(),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.hasData) {
-                                                  Map<String, dynamic>? user = snapshot.data!.data();
-                                                  return Text(
-                                                    user!['username'] ?? 'Username not available',
-                                                    style: TextStyle(
-                                                      fontSize: 19,
-                                                      fontFamily: 'Kanit',
-                                                    ),
-                                                  );
-                                                } else {
-                                                  return const Text("No data");
-                                                }
-                                              }),
+                                          // FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                                          //     future: getUserDetails(),
+                                          //     builder: (context, snapshot) {
+                                          //       if (snapshot.hasData) {
+                                          //         Map<String, dynamic>? user = snapshot.data!.data();
+                                          //         return Text(
+                                          //           user!['username'] ?? 'Username not available',
+                                          //           style: TextStyle(
+                                          //             fontSize: 19,
+                                          //             fontFamily: 'Kanit',
+                                          //           ),
+                                          //         );
+                                          //       } else {
+                                          //         return const Text("No data");
+                                          //       }
+                                          //     }),
                                           Text(
                                             'Kamu ingin pergi ke mana?',
                                             style: TextStyle(
@@ -311,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => OrderTrackingPage()),
+                                MaterialPageRoute(builder: (context) => DriverTrackingPage()),
                               );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -326,6 +327,10 @@ class _HomePageState extends State<HomePage> {
                             label: 'Guest',
                             color: Color(0xFF00B4D8),
                             onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => OrderTrackingPage()),
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text("Kamu sudah menjadi guest"),
