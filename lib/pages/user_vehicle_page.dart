@@ -72,14 +72,18 @@ class _UserVehiclesPageState extends State<UserVehiclesPage> {
               },
             ),
           ),
-          IconButton(
-            onPressed: (() {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddVehiclePage()),
-              );
-            }),
-            icon: Icon(Icons.add),
+          Container(
+            padding: EdgeInsets.all(8.0),
+            color: Colors.grey,
+            child: IconButton(
+              onPressed: (() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddVehiclePage()),
+                );
+              }),
+              icon: Icon(Icons.add),
+            ),
           ),
         ],
       ),

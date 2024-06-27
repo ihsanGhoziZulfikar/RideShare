@@ -72,6 +72,14 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: (() {
+              Navigator.pop(context);
+            })),
+        title: Text('Add Vehicle'),
+      ),
       backgroundColor: Colors.white,
       body: Center(
         child: Form(
@@ -117,12 +125,6 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
               ),
               Row(
                 children: [
-                  ElevatedButton(
-                    onPressed: (() {
-                      FirebaseAuth.instance.signOut();
-                    }),
-                    child: Text('signout'),
-                  ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(

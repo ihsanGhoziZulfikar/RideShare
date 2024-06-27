@@ -38,7 +38,6 @@ class ChatPage extends StatelessWidget {
           Expanded(
             child: _buildMessageList(),
           ),
-          IconButton(onPressed: _authService.signOut, icon: Icon(Icons.logout)),
           _buildUserInput(),
         ],
       ),

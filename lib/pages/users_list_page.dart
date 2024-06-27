@@ -11,7 +11,13 @@ class UsersListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildUserList());
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chat Page'),
+      ),
+      backgroundColor: Colors.white,
+      body: _buildUserList(),
+    );
   }
 
   Widget _buildUserList() {

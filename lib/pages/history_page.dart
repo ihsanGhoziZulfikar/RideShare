@@ -30,36 +30,44 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: (() {
+              Navigator.pop(context);
+            })),
+        title: Text('Timeline'),
+      ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(
             height: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
-              children: [
-                Expanded(
-                  child: Align(
-                      alignment: FractionalOffset.bottomLeft,
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.arrow_back_ios),
-                      )),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      'Timeline',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Stack(
+          //     children: [
+          //       Expanded(
+          //         child: Align(
+          //             alignment: FractionalOffset.bottomLeft,
+          //             child: IconButton(
+          //               onPressed: () {},
+          //               icon: Icon(Icons.arrow_back_ios),
+          //             )),
+          //       ),
+          //       Center(
+          //         child: Padding(
+          //           padding: const EdgeInsets.only(top: 10.0),
+          //           child: Text(
+          //             'Timeline',
+          //             style: TextStyle(color: Colors.black, fontSize: 16),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Divider(thickness: 0.5),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
