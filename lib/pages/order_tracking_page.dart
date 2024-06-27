@@ -1,147 +1,167 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:ride_share/constant.dart';
 
 class OrderTrackingPage extends StatefulWidget {
-  OrderTrackingPage({Key? key}) : super(key: key);
+  const OrderTrackingPage({super.key});
 
   @override
-  _OrderTrackingPageState createState() => _OrderTrackingPageState();
+  State<OrderTrackingPage> createState() => _OrderTrackingPageState();
 }
 
 class _OrderTrackingPageState extends State<OrderTrackingPage> {
+  final Completer<GoogleMapController> _controller = Completer();
+  final locationController = Location();
   late GoogleMapController _mapController;
 
-  final CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(-6.917464, 107.619123), // Bandung, West Java, Indonesia
-    zoom: 8.0,
-  );
+  static const LatLng sourceLocation = LatLng(-6.862417460687757, 107.59372402873836);
+  static const LatLng destination = LatLng(-6.889144835635328, 107.5959113186077);
 
-  final LatLng _startPoint = LatLng(-6.917464, 107.619123);
-  final LatLng _endPoint = LatLng(-6.836283, 108.227014);
+  List<LatLng> polylineCoordinates = [];
+  bool _locationPermissionGranted = false;
 
-  final Set<Polyline> _polylines = {
-    Polyline(
-      polylineId: PolylineId('route1'),
-      points: [
-        LatLng(-6.917464, 107.619123),
-        LatLng(-6.836283, 108.227014),
-      ],
-      color: Colors.blue,
-      width: 5,
-    ),
-  };
-
-  final Set<Marker> _markers = {
-    Marker(
-      markerId: MarkerId('startPoint'),
-      position: LatLng(-6.917464, 107.619123),
-      infoWindow: InfoWindow(title: 'Start Point', snippet: 'Bandung, West Java, Indonesia'),
-    ),
-    Marker(
-      markerId: MarkerId('endPoint'),
-      position: LatLng(-6.836283, 108.227014),
-      infoWindow: InfoWindow(title: 'End Point', snippet: 'Majalengka, West Java, Indonesia'),
-    ),
-  };
+  LatLng? currentPosition;
+  Map<PolylineId, Polyline> polylines = {};
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
   }
 
+  void getPolyPoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      google_api_key,
+      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) => polylineCoordinates.add(
+            LatLng(point.latitude, point.longitude),
+          ));
+      setState(() {});
+    }
+  }
+
+  Future<void> _requestLocationPermission() async {
+    final status = await locationController.requestPermission();
+    if (status == PermissionStatus.granted) {
+      setState(() {
+        _locationPermissionGranted = true;
+      });
+      fetchLocationUpdates();
+    } else {
+      // Handle the case when the user denies the permission
+      print('Location permission denied');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async => await fetchLocationUpdates());
+  }
+
+  Future<void> initializeMap() async {
+    await fetchLocationUpdates();
+    final coordinates = await fetchPolylinePoints();
+    generatePolyLineFromPoints(coordinates);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            initialCameraPosition: _initialPosition,
-            onMapCreated: _onMapCreated,
-            zoomControlsEnabled: false,
-            polylines: _polylines,
-            markers: _markers,
-            onTap: (coordinate) {
-              _mapController.animateCamera(CameraUpdate.newLatLng(coordinate));
-              setState(() {});
-            },
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 3.2,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 20,
-                    offset: Offset.zero,
-                    color: Colors.grey.withOpacity(0.5),
-                  )
-                ],
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage('https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                    ),
-                    title: Text('Marqueze'),
-                    subtitle: Text('Adik Marquez'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.message),
-                          onPressed: () {
-                            // Handle message button press
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.call),
-                          onPressed: () {
-                            // Handle call button press
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(4.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 1,
-                          spreadRadius: 1,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: ListTile(
-                      leading: Image.network('https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', width: 50),
-                      title: Text('E 3536 WR'),
-                      subtitle: Text('BMW X1'),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Nebeng Kuy'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        title: const Text('Track order'),
       ),
+      body: currentPosition == null
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: const CameraPosition(
+                target: sourceLocation,
+                zoom: 14.5,
+              ),
+              markers: {
+                Marker(
+                  markerId: const MarkerId("current"),
+                  position: currentPosition!,
+                ),
+                Marker(
+                  markerId: const MarkerId("source"),
+                  position: sourceLocation,
+                ),
+                Marker(
+                  markerId: const MarkerId("destination"),
+                  position: destination,
+                ),
+              },
+              polylines: Set<Polyline>.of(polylines.values),
+            ),
     );
+  }
+
+  Future<void> fetchLocationUpdates() async {
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await locationController.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await locationController.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await locationController.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await locationController.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    locationController.onLocationChanged.listen((LocationData currentLocation) {
+      if (currentLocation.latitude != null && currentLocation.longitude != null) {
+        setState(() {
+          currentPosition = LatLng(
+            currentLocation.latitude!,
+            currentLocation.longitude!,
+          );
+        });
+      }
+    });
+  }
+
+  Future<List<LatLng>> fetchPolylinePoints() async {
+    final polylinePoints = PolylinePoints();
+    final result = await polylinePoints.getRouteBetweenCoordinates(
+      google_api_key,
+      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+    );
+
+    if (result.points.isNotEmpty) {
+      return result.points.map((point) => LatLng(point.latitude, point.longitude)).toList();
+    } else {
+      debugPrint(result.errorMessage);
+      return [];
+    }
+  }
+
+  Future<void> generatePolyLineFromPoints(List<LatLng> polylineCoordinates) async {
+    const id = PolylineId('polyline');
+
+    final polyline = Polyline(polylineId: id, color: Colors.deepPurple, points: polylineCoordinates, width: 5);
+
+    setState(() {
+      polylines[id] = polyline;
+    });
   }
 }

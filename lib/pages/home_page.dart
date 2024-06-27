@@ -6,6 +6,7 @@ import 'package:ride_share/components/my_clipper_edge.dart';
 import 'package:ride_share/components/my_destination_card.dart';
 import 'package:ride_share/components/my_main_feature_option.dart';
 import 'package:ride_share/components/my_navigation_bar.dart';
+import 'package:ride_share/pages/driver_tracking.dart';
 import 'package:ride_share/pages/order_tracking_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,10 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   // future to fetch user details
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
-    return await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(currentUser!.uid)
-        .get();
+    return await FirebaseFirestore.instance.collection("Users").doc(currentUser!.uid).get();
   }
 
   // sign user out
@@ -133,25 +131,19 @@ class _HomePageState extends State<HomePage> {
                                 height: 65,
                                 width: MediaQuery.of(context).size.width,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          FutureBuilder<
-                                                  DocumentSnapshot<
-                                                      Map<String, dynamic>>>(
+                                          FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                                               future: getUserDetails(),
                                               builder: (context, snapshot) {
                                                 if (snapshot.hasData) {
-                                                  Map<String, dynamic>? user =
-                                                      snapshot.data!.data();
+                                                  Map<String, dynamic>? user = snapshot.data!.data();
                                                   return Text(
-                                                    user!['username'] ??
-                                                        'Username not available',
+                                                    user!['username'] ?? 'Username not available',
                                                     style: TextStyle(
                                                       fontSize: 19,
                                                       fontFamily: 'Kanit',
@@ -217,12 +209,10 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Container(
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
                                         Text(
                                           'Kendaraanmu',
@@ -245,9 +235,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         Text(
                                           'D 2847 AW',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "KaiseiTokumin"),
+                                          style: TextStyle(fontSize: 20, fontFamily: "KaiseiTokumin"),
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -321,16 +309,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           MyMainFeatureOption(
-                            svgIcon:
-                                '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="white" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2M4.205 13.81a8.01 8.01 0 0 0 6.254 6.042c-.193-2.625-1.056-4.2-2.146-5.071c-1.044-.835-2.46-1.158-4.108-.972Zm11.482.97c-1.09.873-1.953 2.447-2.146 5.072a8.01 8.01 0 0 0 6.254-6.043c-1.648-.186-3.064.137-4.108.972ZM12 4a8 8 0 0 0-7.862 6.513l-.043.248l2.21-.442c.582-.116 1.135-.423 1.753-.84l.477-.332C9.332 8.581 10.513 8 12 8c1.388 0 2.509.506 3.3 1.034l.642.445c.54.365 1.032.645 1.536.788l.217.052l2.21.442A8 8 0 0 0 12 4"/></g></svg>',
+                            svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="white" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2M4.205 13.81a8.01 8.01 0 0 0 6.254 6.042c-.193-2.625-1.056-4.2-2.146-5.071c-1.044-.835-2.46-1.158-4.108-.972Zm11.482.97c-1.09.873-1.953 2.447-2.146 5.072a8.01 8.01 0 0 0 6.254-6.043c-1.648-.186-3.064.137-4.108.972ZM12 4a8 8 0 0 0-7.862 6.513l-.043.248l2.21-.442c.582-.116 1.135-.423 1.753-.84l.477-.332C9.332 8.581 10.513 8 12 8c1.388 0 2.509.506 3.3 1.034l.642.445c.54.365 1.032.645 1.536.788l.217.052l2.21.442A8 8 0 0 0 12 4"/></g></svg>',
                             iconSize: 70,
                             label: "Driver",
                             color: Color(0xFF90E0EF),
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => OrderTrackingPage()),
+                                MaterialPageRoute(builder: (context) => OrderTrackingPage()),
                               );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -340,12 +326,15 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                           MyMainFeatureOption(
-                            svgIcon:
-                                '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 512 512"><path fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M208 208v264a23.73 23.73 0 0 0 24 24h0a23.73 23.73 0 0 0 24-24"/><path fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M256 336v136a23.73 23.73 0 0 0 24 24h0a23.73 23.73 0 0 0 24-24V208"/><path fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M208 192v88a23.72 23.72 0 0 1-24 24h0a23.72 23.72 0 0 1-24-24v-88a48 48 0 0 1 48-48h96a48 48 0 0 1 48 48v88a23.72 23.72 0 0 1-24 24h0a23.72 23.72 0 0 1-24-24v-88"/><circle cx="256" cy="56" r="40" fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/></svg>',
+                            svgIcon: '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 512 512"><path fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M208 208v264a23.73 23.73 0 0 0 24 24h0a23.73 23.73 0 0 0 24-24"/><path fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M256 336v136a23.73 23.73 0 0 0 24 24h0a23.73 23.73 0 0 0 24-24V208"/><path fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M208 192v88a23.72 23.72 0 0 1-24 24h0a23.72 23.72 0 0 1-24-24v-88a48 48 0 0 1 48-48h96a48 48 0 0 1 48 48v88a23.72 23.72 0 0 1-24 24h0a23.72 23.72 0 0 1-24-24v-88"/><circle cx="256" cy="56" r="40" fill="none" stroke="white" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/></svg>',
                             iconSize: 65,
                             label: 'Guest',
                             color: Color(0xFF00B4D8),
                             onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => OrderTrackingPage()),
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text("Kamu sudah menjadi guest"),
@@ -375,15 +364,13 @@ class _HomePageState extends State<HomePage> {
                         child: Row(
                           children: [
                             MyDestinationCard(
-                              imageUrl:
-                                  'https://media.istockphoto.com/id/1270561593/id/vektor/gedung-sate-terkenal-membangun-landmark-dari-bandung-jawa-barat-indonesia-konsep-dalam.jpg?s=2048x2048&w=is&k=20&c=wAFmyhfRa-cpK0trkWAp-ZHog39vk1AZvwLS0j77XjU=',
+                              imageUrl: 'https://media.istockphoto.com/id/1270561593/id/vektor/gedung-sate-terkenal-membangun-landmark-dari-bandung-jawa-barat-indonesia-konsep-dalam.jpg?s=2048x2048&w=is&k=20&c=wAFmyhfRa-cpK0trkWAp-ZHog39vk1AZvwLS0j77XjU=',
                               title: 'Gedung Sate',
                               time: '01:30 WIB',
                             ),
                             SizedBox(width: 10),
                             MyDestinationCard(
-                              imageUrl:
-                                  'https://www.shutterstock.com/shutterstock/photos/2460015087/display_1500/stock-photo-bandung-indonesia-april-villa-isola-is-an-art-deco-building-located-on-the-campus-of-2460015087.jpg',
+                              imageUrl: 'https://www.shutterstock.com/shutterstock/photos/2460015087/display_1500/stock-photo-bandung-indonesia-april-villa-isola-is-an-art-deco-building-located-on-the-campus-of-2460015087.jpg',
                               title: 'Universitas Pendidikan Indonesia',
                               time: '10:30 WIB',
                             ),
