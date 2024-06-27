@@ -5,14 +5,14 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:ride_share/constant.dart';
 
-class OrderTrackingPage extends StatefulWidget {
-  const OrderTrackingPage({super.key});
+class DriverPage extends StatefulWidget {
+  const DriverPage({super.key});
 
   @override
-  State<OrderTrackingPage> createState() => _OrderTrackingPageState();
+  State<DriverPage> createState() => _DriverPageState();
 }
 
-class _OrderTrackingPageState extends State<OrderTrackingPage> {
+class _DriverPageState extends State<DriverPage> {
   final Completer<GoogleMapController> _controller = Completer();
   final locationController = Location();
   late GoogleMapController _mapController;
