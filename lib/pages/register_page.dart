@@ -108,6 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
           .doc(userCredential.user!.uid)
           .set(
         {
+          'uid': userCredential.user!.uid,
           'email': userCredential.user!.email,
           'username': usernameController.text,
         },

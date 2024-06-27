@@ -6,8 +6,8 @@ import 'package:ride_share/pages/profile_page.dart';
 import 'package:ride_share/pages/splash_page.dart';
 import 'package:ride_share/components/my_navigation_bar.dart';
 import 'package:ride_share/pages/order_tracking_page.dart';
-import 'package:ride_share/auth/auth.dart';
-import 'package:ride_share/auth/login_or_register.dart';
+import 'package:ride_share/services/auth/auth.dart';
+import 'package:ride_share/services/auth/login_or_register.dart';
 import 'package:ride_share/firebase_options.dart';
 import 'package:ride_share/pages/home_page.dart';
 import 'package:ride_share/theme/light_mode.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const AuthPage(),
+      home: const SplashPage(),
       theme: lightMode,
       routes: {
         '/login_register_page': (context) => const LoginOrRegister(),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ride_share/pages/add_vehicle_page.dart';
+import 'package:ride_share/pages/user_vehicle_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -220,10 +222,20 @@ class ProfilePage extends StatelessWidget {
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(360),
                       ),
-                      child: Icon(
-                        Icons.settings,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 34,
+                      child: IconButton(
+                        onPressed: (() {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserVehiclesPage(),
+                            ),
+                          );
+                        }),
+                        icon: Icon(
+                          Icons.settings,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: 34,
+                        ),
                       ),
                     ),
                     SizedBox(

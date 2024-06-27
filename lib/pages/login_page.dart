@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ride_share/components/my_button.dart';
 import 'package:ride_share/components/my_textfield.dart';
+import 'package:ride_share/services/auth/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -16,6 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final AuthService _authService = AuthService();
   // text editing controller
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -35,30 +37,41 @@ class _LoginPageState extends State<LoginPage> {
 
     // try sign in
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
-
+      // await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //     email: emailController.text, password: passwordController.text);
+      UserCredential userCredential =
+          await _authService.signInWithEmailPassword(
+              emailController.text, passwordController.text);
       // pop loading
       if (context.mounted) Navigator.pop(context);
-    }
-    //on error
-    on FirebaseAuthException catch (e) {
+    } catch (e) {
       // pop loading
-      Navigator.pop(context);
+      if (context.mounted) Navigator.pop(context);
 
+      // Handle errors from signInWithEmailPassword function
       setState(() {
-        switch (e.code) {
-          case 'invalid-email':
-            emailError = e.code;
-            passwordError = null;
-            break;
-          case 'missing-password':
-            emailError = null;
-            passwordError = e.code;
-            break;
-          default:
-            emailError = null;
-            passwordError = e.code;
+        if (e is FirebaseAuthException) {
+          switch (e.code) {
+            case 'invalid-email':
+              emailError = 'Invalid email address';
+              passwordError = null;
+              break;
+            case 'user-not-found':
+              emailError = 'No user found for that email';
+              passwordError = null;
+              break;
+            case 'wrong-password':
+              emailError = null;
+              passwordError = 'Wrong password provided';
+              break;
+            default:
+              emailError = null;
+              passwordError = e.message;
+          }
+        } else {
+          // Handle other exceptions if needed
+          emailError = null;
+          passwordError = e.toString();
         }
       });
     }

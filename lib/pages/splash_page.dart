@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ride_share/auth/auth.dart';
+import 'package:ride_share/services/auth/auth.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
