@@ -16,7 +16,7 @@ class AuthService {
           .signInWithEmailAndPassword(email: email, password: password);
       print('after -----');
       return userCredential;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       rethrow;
     }
   }

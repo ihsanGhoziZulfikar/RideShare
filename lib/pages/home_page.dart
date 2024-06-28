@@ -5,7 +5,6 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:ride_share/components/my_clipper_edge.dart';
 import 'package:ride_share/components/my_destination_card.dart';
 import 'package:ride_share/components/my_main_feature_option.dart';
-import 'package:ride_share/components/my_navigation_bar.dart';
 import 'package:ride_share/pages/guest_page.dart';
 import 'package:ride_share/pages/driver_page.dart';
 

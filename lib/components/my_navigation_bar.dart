@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:ride_share/pages/history_page.dart';
 import 'package:ride_share/pages/home_page.dart';
 import 'package:ride_share/pages/profile_page.dart';
 import 'package:ride_share/pages/users_list_page.dart';
