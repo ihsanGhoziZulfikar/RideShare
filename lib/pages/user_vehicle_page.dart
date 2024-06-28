@@ -171,9 +171,17 @@ class _UserVehiclesPageState extends State<UserVehiclesPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddVehiclePage()),
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                child: AddVehicleForm(),
+              );
+            },
           );
         },
         child: Icon(Icons.add),

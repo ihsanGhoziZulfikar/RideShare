@@ -1,17 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ride_share/components/my_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ride_share/pages/user_vehicle_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ride_share/components/my_textfield.dart';
 
-class AddVehiclePage extends StatefulWidget {
-  const AddVehiclePage({super.key});
-
+class AddVehicleForm extends StatefulWidget {
   @override
-  State<AddVehiclePage> createState() => _AddVehiclePageState();
+  _AddVehicleFormState createState() => _AddVehicleFormState();
 }
 
-class _AddVehiclePageState extends State<AddVehiclePage> {
+class _AddVehicleFormState extends State<AddVehicleForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _licenseController = TextEditingController();
@@ -63,6 +60,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
       _nameController.clear();
       _licenseController.clear();
       _typeController.clear();
+      Navigator.pop(context);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to add vehicle: $error')));
@@ -71,71 +69,84 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: (() {
-              Navigator.pop(context);
-            })),
-        title: Text('Add Vehicle'),
-      ),
-      backgroundColor: Colors.white,
-      body: Center(
+    return Padding(
+      padding: MediaQuery.of(context).viewInsets, // Adjust for keyboard
+      child: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisSize:
+                MainAxisSize.min, // Makes the modal content wrap its content
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Add Vehicle', style: TextStyle(fontSize: 24.0)),
-
-              // name
-              MyTextField(
-                hintText: "Vehicle Name",
-                obscureText: false,
-                controller: _nameController,
-                prefixIcon: Icons.car_repair_rounded,
-              ),
-              SizedBox(height: 10.0),
-
-              // licence
-              MyTextField(
-                hintText: "Licence Number",
-                obscureText: false,
-                controller: _licenseController,
-                prefixIcon: Icons.featured_play_list_outlined,
-              ),
-              SizedBox(height: 10.0),
-
-              // type
-              MyTextField(
-                hintText: "Type",
-                obscureText: false,
-                controller: _typeController,
-                prefixIcon: Icons.pedal_bike_outlined,
-              ),
-              SizedBox(height: 10.0),
-
-              ElevatedButton(
-                onPressed: () {
-                  print('Add button pressed');
-                  _submitForm();
-                },
-                child: Text('Add'),
-              ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UserVehiclesPage()),
-                      );
-                    },
-                    child: Text('vehicle list'),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20.0,
+                  bottom: 10,
+                ),
+                child: Text(
+                  'Add Vehicle',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 24.0,
                   ),
-                ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 15,
+                ),
+                child: Column(
+                  children: [
+                    MyTextField(
+                      hintText: "Vehicle Name",
+                      obscureText: false,
+                      controller: _nameController,
+                      prefixIcon: Icons.car_repair_rounded,
+                    ),
+                    SizedBox(height: 10.0),
+
+                    // licence
+                    MyTextField(
+                      hintText: "Licence Number",
+                      obscureText: false,
+                      controller: _licenseController,
+                      prefixIcon: Icons.featured_play_list_outlined,
+                    ),
+                    SizedBox(height: 10.0),
+
+                    // type
+                    MyTextField(
+                      hintText: "Type",
+                      obscureText: false,
+                      controller: _typeController,
+                      prefixIcon: Icons.pedal_bike_outlined,
+                    ),
+                    SizedBox(height: 10.0),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: _submitForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  minimumSize: Size(130, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text(
+                  'Add',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 15,
               )
             ],
           ),
