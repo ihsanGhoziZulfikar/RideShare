@@ -331,8 +331,8 @@ class _HomePageState extends State<HomePage> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(20),
                                         image: DecorationImage(
-                                          image: NetworkImage(
-                                            "https://imgcdn.oto.com/medium/gallery/exterior/38/2707/toyota-innova-zenix-hybrid-ev-front-angle-low-view-239610.jpg",
+                                          image: AssetImage(
+                                            'assets/images/toyota.webp',
                                           ),
                                           fit: BoxFit.cover,
                                         ),
