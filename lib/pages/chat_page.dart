@@ -34,9 +34,18 @@ class _ChatPageState extends State<ChatPage> {
 
     myFocusNode.addListener(() {
       if (myFocusNode.hasFocus) {
-        Future.delayed(const Duration(microseconds: 500), () => scrollDown());
+        Future.delayed(
+          const Duration(seconds: 1),
+          () => scrollDown(),
+        );
       }
     });
+
+    // scroll on open
+    Future.delayed(
+      const Duration(seconds: 1),
+      () => scrollDown(),
+    );
   }
 
   @override
@@ -58,6 +67,10 @@ class _ChatPageState extends State<ChatPage> {
       await _chatService.SendMessage(
           widget.receiverId, _messageController.text);
       _messageController.clear();
+      Future.delayed(
+        const Duration(seconds: 1),
+        () => scrollDown(),
+      );
     }
   }
 
