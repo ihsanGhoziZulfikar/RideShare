@@ -71,9 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
     // if no error, try creating the user
     try {
       // creating user
-      UserCredential? userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text);
+      UserCredential? userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: emailController.text, password: passwordController.text);
 
       // create a user document and add to firestore
       createUserDocument(userCredential);
@@ -103,14 +101,15 @@ class _RegisterPageState extends State<RegisterPage> {
   // create a user document and collect them in firestore
   Future<void> createUserDocument(UserCredential? userCredential) async {
     if (userCredential != null && userCredential.user != null) {
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(userCredential.user!.uid)
-          .set(
+      await FirebaseFirestore.instance.collection("Users").doc(userCredential.user!.uid).set(
         {
           'uid': userCredential.user!.uid,
           'email': userCredential.user!.email,
           'username': usernameController.text,
+          'lat': '',
+          'lng': '',
+          'status': '',
+          'destination': '',
         },
       );
     }
@@ -189,8 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               color: Colors.grey,
                               spreadRadius: 0,
                               blurRadius: 3,
-                              offset:
-                                  Offset(0, 3), // changes position of shadow
+                              offset: Offset(0, 3), // changes position of shadow
                             ),
                           ],
                         ),
@@ -207,8 +205,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   child: Text(
                                     'Login',
                                     style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
+                                      color: Theme.of(context).colorScheme.primary,
                                       fontSize: 25,
                                     ),
                                   ),
@@ -217,9 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   children: [
                                     Text('Register',
                                         style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                           fontSize: 25,
                                           fontWeight: FontWeight.w600,
                                         )),
@@ -230,9 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       height: 3.0,
                                       width: 100.0,
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                        color: Theme.of(context).colorScheme.primary,
                                         borderRadius: const BorderRadius.all(
                                           Radius.circular(10.0),
                                         ),
@@ -299,8 +292,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       color: Colors.grey,
                                       spreadRadius: 0,
                                       blurRadius: 2,
-                                      offset: Offset(
-                                          0, 3), // changes position of shadow
+                                      offset: Offset(0, 3), // changes position of shadow
                                     ),
                                   ],
                                 ),

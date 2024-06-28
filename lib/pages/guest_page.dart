@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ride_share/pages/chat_page.dart';
+import 'package:location/location.dart' as loc;
 
 class GuestPage extends StatefulWidget {
   GuestPage({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _GuestPageState extends State<GuestPage> {
   late GoogleMapController _mapController;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final User? currentUser = FirebaseAuth.instance.currentUser;
+  final loc.Location _location = loc.Location();
 
   final CameraPosition _initialPosition = CameraPosition(
     target: LatLng(-6.917464, 107.619123), // Bandung, West Java, Indonesia
@@ -44,15 +46,52 @@ class _GuestPageState extends State<GuestPage> {
   String? _selectedMarkerEmail;
   String? _selectedMarkerId;
   bool _isMarkerSelected = false;
+  String _driverName = '';
 
   @override
   void initState() {
     super.initState();
+    _fetchCurrentLocation();
   }
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
     _fetchUserLocations();
+  }
+
+  Future<void> _fetchCurrentLocation() async {
+    bool serviceEnabled;
+    loc.PermissionStatus permissionGranted;
+
+    serviceEnabled = await _location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await _location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await _location.hasPermission();
+    if (permissionGranted == loc.PermissionStatus.denied) {
+      permissionGranted = await _location.requestPermission();
+      if (permissionGranted != loc.PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    loc.LocationData currentLocation = await _location.getLocation();
+    if (currentLocation.latitude != null && currentLocation.longitude != null) {
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: MarkerId('currentLocation'),
+            position: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+            infoWindow: InfoWindow(title: 'Current Location'),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+          ),
+        );
+      });
+    }
   }
 
   Future<void> _fetchUserLocations() async {
@@ -85,6 +124,7 @@ class _GuestPageState extends State<GuestPage> {
                       _selectedMarkerEmail = userData['email'];
                       _selectedMarkerId = doc.id;
                       _isMarkerSelected = true;
+                      _driverName = userData['username'];
                     });
                   },
                 ),
@@ -157,6 +197,27 @@ class _GuestPageState extends State<GuestPage> {
       setState(() {
         _isMarkerSelected = false;
       });
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Notification'),
+            content: Text('Sukses meminta nebeng ke $_driverName.'),
+            actions: [
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Colors.white),
+                ),
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _isMarkerSelected = false;
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
