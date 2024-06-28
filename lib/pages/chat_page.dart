@@ -5,6 +5,7 @@ import 'package:ride_share/components/chat_bubble.dart';
 import 'package:ride_share/components/my_textfield.dart';
 import 'package:ride_share/services/auth/auth_service.dart';
 import 'package:ride_share/services/chat/chat_service.dart';
+import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverEmail;
@@ -29,7 +30,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     myFocusNode.addListener(() {
@@ -50,7 +50,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     myFocusNode.dispose();
     _messageController.dispose();
     super.dispose();
@@ -78,11 +77,39 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(widget.receiverEmail),
-      ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 20.0,
+              left: 10,
+              bottom: 15,
+            ),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_rounded,
+                    size: 30,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  widget.receiverEmail,
+                  style: TextStyle(
+                    fontFamily: 'Kantumruy',
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: _buildMessageList(),
           ),
@@ -92,8 +119,23 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  String formatTimestamp(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inDays == 0) {
+      return 'Today';
+    } else if (difference.inDays < 7) {
+      return DateFormat.EEEE().format(timestamp);
+    } else {
+      return DateFormat('d MMMM yyyy').format(timestamp);
+    }
+  }
+
   Widget _buildMessageList() {
     String senderId = _authService.getCurrentUser()!.uid;
+    DateTime? previousTimestamp;
+
     return StreamBuilder(
       stream: _chatService.getMessages(senderId, widget.receiverId),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -109,23 +151,39 @@ class _ChatPageState extends State<ChatPage> {
           return const Center(child: Text("No messages"));
         }
 
-        return ListView(
+        return ListView.builder(
           controller: _scrollController,
-          children: snapshot.data!.docs.map((doc) {
-            return _buildMessageItem(doc);
-          }).toList(),
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            final doc = snapshot.data!.docs[index];
+            final currentTimestamp = (doc['timestamp'] as Timestamp).toDate();
+            String? startDateString;
+
+            if (previousTimestamp == null ||
+                !isSameDay(previousTimestamp!, currentTimestamp)) {
+              startDateString = formatTimestamp(currentTimestamp);
+            }
+
+            previousTimestamp = currentTimestamp;
+
+            return _buildMessageItem(doc, startDateString);
+          },
         );
       },
     );
   }
 
-  Widget _buildMessageItem(DocumentSnapshot doc) {
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  Widget _buildMessageItem(DocumentSnapshot doc, String? startDateString) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // is current user
     bool isCurrentUser = data['senderId'] == _authService.getCurrentUser()!.uid;
 
-    // convert timestamp to DateTime
     DateTime timestamp = (data['timestamp'] as Timestamp).toDate();
 
     return Align(
@@ -134,6 +192,7 @@ class _ChatPageState extends State<ChatPage> {
         message: data['message'],
         isCurrentUser: isCurrentUser,
         timestamp: timestamp,
+        startDateString: startDateString,
       ),
     );
   }
