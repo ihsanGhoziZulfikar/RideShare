@@ -12,11 +12,26 @@ class UsersListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat Page'),
-      ),
       backgroundColor: Colors.white,
-      body: _buildUserList(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 35),
+            Text(
+              'Chat Page',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 22,
+                fontFamily: "Kantumruy",
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Expanded(child: _buildUserList()),
+          ],
+        ),
+      ),
     );
   }
 
