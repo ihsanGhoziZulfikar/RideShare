@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ride_share/pages/add_vehicle_page.dart';
-import 'package:ride_share/pages/history_page.dart';
-import 'package:ride_share/pages/profile_page.dart';
 import 'package:ride_share/pages/splash_page.dart';
-import 'package:ride_share/components/my_navigation_bar.dart';
-import 'package:ride_share/pages/driver_page.dart';
-import 'package:ride_share/services/auth/auth.dart';
 import 'package:ride_share/services/auth/login_or_register.dart';
 import 'package:ride_share/firebase_options.dart';
 import 'package:ride_share/pages/home_page.dart';
 import 'package:ride_share/theme/light_mode.dart';
-
-import 'dart:async';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

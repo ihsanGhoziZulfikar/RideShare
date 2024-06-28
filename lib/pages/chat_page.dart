@@ -5,8 +5,9 @@ import 'package:ride_share/components/chat_bubble.dart';
 import 'package:ride_share/components/my_textfield.dart';
 import 'package:ride_share/services/auth/auth_service.dart';
 import 'package:ride_share/services/chat/chat_service.dart';
+import 'package:intl/intl.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final String receiverEmail;
   final String receiverId;
   ChatPage({
@@ -15,15 +16,60 @@ class ChatPage extends StatelessWidget {
     required this.receiverId,
   });
 
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
 
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
 
+  FocusNode myFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    myFocusNode.addListener(() {
+      if (myFocusNode.hasFocus) {
+        Future.delayed(
+          const Duration(seconds: 1),
+          () => scrollDown(),
+        );
+      }
+    });
+
+    // scroll on open
+    Future.delayed(
+      const Duration(seconds: 1),
+      () => scrollDown(),
+    );
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  final ScrollController _scrollController = ScrollController();
+  void scrollDown() {
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+        duration: const Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+  }
+
   void sendMessage() async {
     if (_messageController.text.isNotEmpty) {
-      await _chatService.SendMessage(receiverId, _messageController.text);
+      await _chatService.SendMessage(
+          widget.receiverId, _messageController.text);
       _messageController.clear();
+      Future.delayed(
+        const Duration(seconds: 1),
+        () => scrollDown(),
+      );
     }
   }
 
@@ -31,11 +77,39 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(receiverEmail),
-      ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 20.0,
+              left: 10,
+              bottom: 15,
+            ),
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_rounded,
+                    size: 30,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  widget.receiverEmail,
+                  style: TextStyle(
+                    fontFamily: 'Kantumruy',
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: _buildMessageList(),
           ),
@@ -45,10 +119,25 @@ class ChatPage extends StatelessWidget {
     );
   }
 
+  String formatTimestamp(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inDays == 0) {
+      return 'Today';
+    } else if (difference.inDays < 7) {
+      return DateFormat.EEEE().format(timestamp);
+    } else {
+      return DateFormat('d MMMM yyyy').format(timestamp);
+    }
+  }
+
   Widget _buildMessageList() {
     String senderId = _authService.getCurrentUser()!.uid;
+    DateTime? previousTimestamp;
+
     return StreamBuilder(
-      stream: _chatService.getMessages(senderId, receiverId),
+      stream: _chatService.getMessages(senderId, widget.receiverId),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Center(child: Text("Error loading messages"));
@@ -62,30 +151,50 @@ class ChatPage extends StatelessWidget {
           return const Center(child: Text("No messages"));
         }
 
-        return ListView(
-          children: snapshot.data!.docs.map((doc) {
-            return _buildMessageItem(doc);
-          }).toList(),
+        return ListView.builder(
+          controller: _scrollController,
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (context, index) {
+            final doc = snapshot.data!.docs[index];
+            final currentTimestamp = (doc['timestamp'] as Timestamp).toDate();
+            String? startDateString;
+
+            if (previousTimestamp == null ||
+                !isSameDay(previousTimestamp!, currentTimestamp)) {
+              startDateString = formatTimestamp(currentTimestamp);
+            }
+
+            previousTimestamp = currentTimestamp;
+
+            return _buildMessageItem(doc, startDateString);
+          },
         );
       },
     );
   }
 
-  Widget _buildMessageItem(DocumentSnapshot doc) {
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  Widget _buildMessageItem(DocumentSnapshot doc, String? startDateString) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // is current user
     bool isCurrentUser = data['senderId'] == _authService.getCurrentUser()!.uid;
 
-    // align
-    var alignment =
-        isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    DateTime timestamp = (data['timestamp'] as Timestamp).toDate();
 
-    // return ChatBubble(message: data['message'], isCurrentUser: isCurrentUser);
-    return Container(
-        alignment: alignment,
-        child:
-            ChatBubble(message: data['message'], isCurrentUser: isCurrentUser));
+    return Align(
+      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: ChatBubble(
+        message: data['message'],
+        isCurrentUser: isCurrentUser,
+        timestamp: timestamp,
+        startDateString: startDateString,
+      ),
+    );
   }
 
   Widget _buildUserInput() {
@@ -99,6 +208,7 @@ class ChatPage extends StatelessWidget {
               obscureText: false,
               controller: _messageController,
               prefixIcon: Icons.face_5_outlined,
+              focusNode: myFocusNode,
             ),
           ),
           IconButton(
