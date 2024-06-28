@@ -320,7 +320,12 @@ class _GuestPageState extends State<GuestPage> {
                             ],
                           ),
                         ),
-                        Divider(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Divider(
+                            thickness: 0.3,
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           child: Container(

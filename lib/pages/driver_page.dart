@@ -41,6 +41,8 @@ class _DriverPageState extends State<DriverPage> {
 
   String _passengerName = '';
 
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +53,8 @@ class _DriverPageState extends State<DriverPage> {
   @override
   void dispose() {
     _requestSubscription?.cancel();
+    _searchController.dispose();
+
     super.dispose();
   }
 
@@ -192,31 +196,119 @@ class _DriverPageState extends State<DriverPage> {
     });
   }
 
+  Future<void> _searchDestination() async {
+    String query = _searchController.text;
+    try {
+      List<Location> locations = await locationFromAddress(query);
+      if (locations.isNotEmpty) {
+        Location location = locations.first;
+        LatLng destinationLatLng = LatLng(location.latitude, location.longitude);
+
+        String cityName = await getCityName(location.latitude, location.longitude);
+
+        final currentUser = FirebaseAuth.instance.currentUser;
+        if (currentUser != null) {
+          try {
+            await FirebaseFirestore.instance.collection('Users').doc(currentUser.uid).update({
+              'destination': cityName,
+            });
+            print('Destination updated in Firestore: $cityName');
+          } catch (e) {
+            print('Error updating destination in Firestore: $e');
+          }
+        }
+
+        setState(() {
+          _markers.add(
+            Marker(
+              markerId: MarkerId('destination'),
+              position: destinationLatLng,
+              infoWindow: InfoWindow(title: 'Destination'),
+            ),
+          );
+          _mapController.animateCamera(CameraUpdate.newLatLng(destinationLatLng));
+        });
+      }
+    } catch (e) {
+      print('Error occurred while searching for destination: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Track nebeng'),
-      ),
       body: Stack(
         children: [
           currentPosition == null
               ? const Center(child: CircularProgressIndicator())
               : GoogleMap(
                   onMapCreated: _onMapCreated,
-                  initialCameraPosition: const CameraPosition(
-                    target: sourceLocation,
-                    zoom: 14.5,
-                  ),
+                  initialCameraPosition: currentPosition != null
+                      ? CameraPosition(
+                          target: currentPosition!,
+                          zoom: 14.5,
+                        )
+                      : const CameraPosition(
+                          target: sourceLocation,
+                          zoom: 14.5,
+                        ),
                   markers: _markers.union({
                     if (currentPosition != null)
                       Marker(
                         markerId: const MarkerId("current"),
                         position: currentPosition!,
                       ),
+                    Marker(
+                      markerId: const MarkerId("source"),
+                      position: sourceLocation,
+                    ),
+                    Marker(
+                      markerId: const MarkerId("destination"),
+                      position: destination,
+                    ),
                   }),
-                  polylines: Set<Polyline>.of(polylines.values),
+                  polylines: {
+                    Polyline(
+                      polylineId: const PolylineId("route"),
+                      points: polylineCoordinates,
+                      color: const Color(0xFF7B61FF),
+                      width: 6,
+                    ),
+                  },
                 ),
+          Positioned(
+            right: 0,
+            left: 0,
+            top: 25,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  style: TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    hintText: 'Masukan destinasi',
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.search,
+                        color: Color(0xff0077B6),
+                      ),
+                      onPressed: _searchDestination,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide.none, // Optional: Remove the border if you want to use the container's decoration
+                    ),
+                  ),
+                  onSubmitted: (value) => _searchDestination(),
+                ),
+              ),
+            ),
+          ),
           Positioned(
             right: 0,
             left: 0,
@@ -290,7 +382,12 @@ class _DriverPageState extends State<DriverPage> {
                             ],
                           ),
                         ),
-                        Divider(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Divider(
+                            thickness: 0.3,
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           child: Container(
@@ -335,7 +432,7 @@ class _DriverPageState extends State<DriverPage> {
                                     actions: [
                                       TextButton(
                                         style: ButtonStyle(
-                                          backgroundColor: WidgetStatePropertyAll(Colors.white),
+                                          backgroundColor: MaterialStateProperty.all(Colors.white),
                                         ),
                                         child: Text('OK'),
                                         onPressed: () {
