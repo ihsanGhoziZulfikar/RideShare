@@ -18,13 +18,38 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // current user
   final User? currentUser = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // future to fetch user details
   Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
-    return await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(currentUser!.uid)
-        .get();
+    return await _firestore.collection("Users").doc(currentUser!.uid).get();
+  }
+
+  // future to fetch user vehicle
+  // Fetch one random user vehicle
+  // Fetch one random user vehicle
+  Future<Map<String, dynamic>?> getRandomUserVehicle() async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> vehicleSnapshot = await _firestore
+          .collection("Users")
+          .doc(currentUser!.uid)
+          .collection("vehicles")
+          .limit(1)
+          .get();
+
+      if (vehicleSnapshot.docs.isNotEmpty) {
+        return vehicleSnapshot.docs.first.data();
+      } else {
+        return {
+          "licence": "no licence",
+          "name": "no vehicle",
+          "type": "no type"
+        };
+      }
+    } catch (e) {
+      print("Error fetching random user vehicle: $e");
+      return {"licence": "no licence", "name": "no vehicle", "type": "no type"};
+    }
   }
 
   // update user status
@@ -223,55 +248,83 @@ class _HomePageState extends State<HomePage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          'Kendaraanmu',
-                                          style: TextStyle(
-                                            fontFamily: 'Kantumruy',
-                                            fontSize: 19,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 7,
-                                        ),
-                                        Text(
-                                          'Toyota Kijang',
-                                          style: TextStyle(
-                                            fontFamily: 'Kanit',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w200,
-                                          ),
-                                        ),
-                                        Text(
-                                          'D 2847 AW',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "KaiseiTokumin"),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                          width: 90,
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              print('you hit the button');
-                                            },
-                                            child: Text(
-                                              'Ubah',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w900,
-                                                fontSize: 18,
+                                    FutureBuilder<Map<String, dynamic>?>(
+                                        future: getRandomUserVehicle(),
+                                        builder: (context, vehicleSnapshot) {
+                                          if (vehicleSnapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+
+                                          if (vehicleSnapshot.hasError) {
+                                            return Center(
+                                                child: Text(
+                                                    "Error fetching vehicle"));
+                                          }
+
+                                          if (!vehicleSnapshot.hasData ||
+                                              vehicleSnapshot.data == null) {
+                                            return Center(
+                                                child:
+                                                    Text("No vehicle found"));
+                                          }
+                                          Map<String, dynamic> vehicle =
+                                              vehicleSnapshot.data!;
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'Kendaraanmu',
+                                                style: TextStyle(
+                                                  fontFamily: 'Kantumruy',
+                                                  fontSize: 19,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                              SizedBox(
+                                                height: 7,
+                                              ),
+                                              Text(
+                                                vehicle['name'] ?? "no vehicle",
+                                                style: TextStyle(
+                                                  fontFamily: 'Kanit',
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w200,
+                                                ),
+                                              ),
+                                              Text(
+                                                vehicle['license'] ??
+                                                    "no license",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily:
+                                                        "KaiseiTokumin"),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                width: 90,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    print('you hit the button');
+                                                  },
+                                                  child: Text(
+                                                    'Ubah',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      fontSize: 18,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          );
+                                        }),
                                     Container(
                                       width: 164,
                                       height: 130,

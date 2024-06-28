@@ -42,7 +42,7 @@ class _SplashPageState extends State<SplashPage> {
             child: Padding(
               padding: EdgeInsets.only(bottom: 50.0),
               child: Text(
-                'Let\'s Ride',
+                'ride smart, ride green',
                 style: TextStyle(
                   fontSize: 24,
                   color: Colors.white,
