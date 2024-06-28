@@ -27,18 +27,6 @@ class ProfilePage extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: Stack(
                 children: [
-                  Expanded(
-                    child: Align(
-                        alignment: FractionalOffset.bottomLeft,
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: Colors.black,
-                            size: 24,
-                          ),
-                        )),
-                  ),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10.0),

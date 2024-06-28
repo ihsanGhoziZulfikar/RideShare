@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ride_share/constant.dart';
 
 class DriverPage extends StatefulWidget {
@@ -14,8 +17,9 @@ class DriverPage extends StatefulWidget {
 
 class _DriverPageState extends State<DriverPage> {
   final Completer<GoogleMapController> _controller = Completer();
-  final locationController = Location();
+  final Location locationController = Location();
   late GoogleMapController _mapController;
+  StreamSubscription<QuerySnapshot>? _requestSubscription;
 
   static const LatLng sourceLocation = LatLng(-6.862417460687757, 107.59372402873836);
   static const LatLng destination = LatLng(-6.889144835635328, 107.5959113186077);
@@ -26,8 +30,24 @@ class _DriverPageState extends State<DriverPage> {
   LatLng? currentPosition;
   Map<PolylineId, Polyline> polylines = {};
 
+  final Set<Marker> _markers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _requestLocationPermission();
+    _listenForRequests();
+  }
+
+  @override
+  void dispose() {
+    _requestSubscription?.cancel();
+    super.dispose();
+  }
+
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
+    _controller.complete(controller);
   }
 
   void getPolyPoints() async {
@@ -43,7 +63,9 @@ class _DriverPageState extends State<DriverPage> {
       result.points.forEach((PointLatLng point) => polylineCoordinates.add(
             LatLng(point.latitude, point.longitude),
           ));
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -55,28 +77,95 @@ class _DriverPageState extends State<DriverPage> {
       });
       fetchLocationUpdates();
     } else {
-      // Handle the case when the user denies the permission
       print('Location permission denied');
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async => await fetchLocationUpdates());
+  Future<void> _listenForRequests() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    _requestSubscription = FirebaseFirestore.instance.collection('Requests').where('driverId', isEqualTo: currentUser?.uid).where('status', isEqualTo: 'pending').snapshots().listen((querySnapshot) {
+      for (var docChange in querySnapshot.docChanges) {
+        if (docChange.type == DocumentChangeType.added) {
+          var request = docChange.doc.data() as Map<String, dynamic>;
+          request['id'] = docChange.doc.id; // Simpan ID dokumen dalam request
+
+          print('New request from passenger: ${request['passengerId']}');
+          _showNewRequestDialog(request);
+        }
+      }
+    });
   }
 
-  Future<void> initializeMap() async {
-    await fetchLocationUpdates();
-    final coordinates = await fetchPolylinePoints();
-    generatePolyLineFromPoints(coordinates);
+  void _showNewRequestDialog(Map<String, dynamic> request) {
+    FirebaseFirestore.instance.collection('Users').doc(request['passengerId']).get().then((userData) {
+      if (userData.exists) {
+        String passengerUsername = userData['username'];
+        double passengerLat = double.tryParse(userData['lat'].toString()) ?? 0.0;
+        double passengerLng = double.tryParse(userData['lng'].toString()) ?? 0.0;
+
+        print('Passenger data: Username: $passengerUsername, Lat: $passengerLat, Lng: $passengerLng');
+
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('New Ride Request'),
+              content: SingleChildScrollView(
+                child: Text('You have a new ride request from passenger $passengerUsername. Location: ($passengerLat, $passengerLng)'),
+              ),
+              actions: [
+                TextButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+
+                    try {
+                      // Cek apakah dokumen ada sebelum memperbarui
+                      final docSnapshot = await FirebaseFirestore.instance.collection('Requests').doc(request['id']).get();
+                      if (docSnapshot.exists) {
+                        await FirebaseFirestore.instance.collection('Requests').doc(request['id']).update({
+                          'status': 'seen'
+                        });
+
+                        // Add guest marker
+                        setState(() {
+                          _markers.add(
+                            Marker(
+                              markerId: MarkerId('guest_${request['passengerId']}'),
+                              position: LatLng(passengerLat, passengerLng),
+                              infoWindow: InfoWindow(
+                                title: "Guest: $passengerUsername",
+                              ),
+                            ),
+                          );
+                        });
+                      } else {
+                        print('Document not found');
+                      }
+                    } catch (e) {
+                      print('Error updating document: $e');
+                    }
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        print('User data not found for passengerId: ${request['passengerId']}');
+      }
+    }).catchError((error) {
+      print('Error fetching user data: $error');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Track order'),
+        title: const Text('Track nebeng'),
       ),
       body: currentPosition == null
           ? const Center(
@@ -88,20 +177,20 @@ class _DriverPageState extends State<DriverPage> {
                 target: sourceLocation,
                 zoom: 14.5,
               ),
-              markers: {
+              markers: _markers.union({
                 Marker(
                   markerId: const MarkerId("current"),
                   position: currentPosition!,
                 ),
-                Marker(
-                  markerId: const MarkerId("source"),
-                  position: sourceLocation,
-                ),
-                Marker(
-                  markerId: const MarkerId("destination"),
-                  position: destination,
-                ),
-              },
+                // Marker(
+                //   markerId: const MarkerId("source"),
+                //   position: sourceLocation,
+                // ),
+                // Marker(
+                //   markerId: const MarkerId("destination"),
+                //   position: destination,
+                // ),
+              }),
               polylines: Set<Polyline>.of(polylines.values),
             ),
     );
@@ -129,39 +218,15 @@ class _DriverPageState extends State<DriverPage> {
 
     locationController.onLocationChanged.listen((LocationData currentLocation) {
       if (currentLocation.latitude != null && currentLocation.longitude != null) {
-        setState(() {
-          currentPosition = LatLng(
-            currentLocation.latitude!,
-            currentLocation.longitude!,
-          );
-        });
+        if (mounted) {
+          setState(() {
+            currentPosition = LatLng(
+              currentLocation.latitude!,
+              currentLocation.longitude!,
+            );
+          });
+        }
       }
-    });
-  }
-
-  Future<List<LatLng>> fetchPolylinePoints() async {
-    final polylinePoints = PolylinePoints();
-    final result = await polylinePoints.getRouteBetweenCoordinates(
-      google_api_key,
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-
-    if (result.points.isNotEmpty) {
-      return result.points.map((point) => LatLng(point.latitude, point.longitude)).toList();
-    } else {
-      debugPrint(result.errorMessage);
-      return [];
-    }
-  }
-
-  Future<void> generatePolyLineFromPoints(List<LatLng> polylineCoordinates) async {
-    const id = PolylineId('polyline');
-
-    final polyline = Polyline(polylineId: id, color: Colors.deepPurple, points: polylineCoordinates, width: 5);
-
-    setState(() {
-      polylines[id] = polyline;
     });
   }
 }
