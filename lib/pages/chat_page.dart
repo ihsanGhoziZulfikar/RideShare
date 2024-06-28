@@ -77,15 +77,17 @@ class ChatPage extends StatelessWidget {
     // is current user
     bool isCurrentUser = data['senderId'] == _authService.getCurrentUser()!.uid;
 
-    // align
-    var alignment =
-        isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    // convert timestamp to DateTime
+    DateTime timestamp = (data['timestamp'] as Timestamp).toDate();
 
-    // return ChatBubble(message: data['message'], isCurrentUser: isCurrentUser);
-    return Container(
-        alignment: alignment,
-        child:
-            ChatBubble(message: data['message'], isCurrentUser: isCurrentUser));
+    return Align(
+      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: ChatBubble(
+        message: data['message'],
+        isCurrentUser: isCurrentUser,
+        timestamp: timestamp,
+      ),
+    );
   }
 
   Widget _buildUserInput() {
