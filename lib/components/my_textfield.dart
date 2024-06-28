@@ -6,6 +6,7 @@ class MyTextField extends StatefulWidget {
   final TextEditingController controller;
   final IconData prefixIcon;
   final String? errorText;
+  final FocusNode? focusNode;
 
   const MyTextField({
     super.key,
@@ -14,6 +15,7 @@ class MyTextField extends StatefulWidget {
     required this.controller,
     required this.prefixIcon,
     this.errorText,
+    this.focusNode,
   });
 
   @override
@@ -37,6 +39,7 @@ class _MyTextFieldState extends State<MyTextField> {
         TextField(
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
           controller: widget.controller,
+          focusNode: widget.focusNode,
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
