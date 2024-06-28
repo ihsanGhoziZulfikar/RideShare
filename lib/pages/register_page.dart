@@ -153,10 +153,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               fontWeight: FontWeight.w200,
                             ),
                           ),
+                          SizedBox(
+                            height: 3,
+                          ),
                           Text(
-                            'Lorem ipsum dolor sit amet',
+                            'Selamat datang di aplikasi ride share,\nbersama kita kurangi kemacetan dan\nmenjaga lingkungan!',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.w100,
                             ),

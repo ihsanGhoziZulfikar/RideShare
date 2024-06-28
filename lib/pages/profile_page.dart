@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:ride_share/pages/history_page.dart';
 import 'package:ride_share/pages/user_vehicle_page.dart';
 import 'package:ride_share/services/auth/auth.dart';
@@ -24,34 +25,16 @@ class ProfilePage extends StatelessWidget {
               ),
               margin: EdgeInsets.only(bottom: 30),
               width: MediaQuery.of(context).size.width,
-              child: Stack(
-                children: [
-                  Expanded(
-                    child: Align(
-                        alignment: FractionalOffset.bottomLeft,
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            color: Colors.black,
-                            size: 24,
-                          ),
-                        )),
+              child: Center(
+                child: Text(
+                  'Akun',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontFamily: "Kantumruy",
+                    fontWeight: FontWeight.bold,
                   ),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        'Akun',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
             CircleAvatar(
@@ -68,8 +51,8 @@ class ProfilePage extends StatelessWidget {
               _authService.getCurrentUser()!.email ?? "no name",
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
               ),
             ),
             SizedBox(
@@ -82,7 +65,7 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   Container(
                     height: 75,
-                    width: 167,
+                    width: 140,
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 1,
@@ -127,7 +110,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   Container(
                     height: 75,
-                    width: 167,
+                    width: 140,
                     decoration: BoxDecoration(
                       border: Border.all(
                         width: 1,
@@ -181,12 +164,12 @@ class ProfilePage extends StatelessWidget {
                           height: 56,
                           width: 56,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: Color(0xff90E0EF),
                             borderRadius: BorderRadius.circular(360),
                           ),
                           child: Icon(
-                            Icons.notifications,
-                            color: Theme.of(context).colorScheme.primary,
+                            Icons.location_history,
+                            color: Colors.white,
                             size: 34,
                           ),
                         ),
@@ -243,7 +226,7 @@ class ProfilePage extends StatelessWidget {
                           height: 56,
                           width: 56,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: Color(0xff00B4D8),
                             borderRadius: BorderRadius.circular(360),
                           ),
                           child: IconButton(
@@ -255,9 +238,9 @@ class ProfilePage extends StatelessWidget {
                                 ),
                               );
                             }),
-                            icon: Icon(
-                              Icons.settings,
-                              color: Theme.of(context).colorScheme.primary,
+                            icon: Iconify(
+                              '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 48 48"><path fill="white" d="m9.198 16.5l-.433 1.767A4.25 4.25 0 0 0 6 22.25v17.5A3.25 3.25 0 0 0 9.25 43h3.5A3.25 3.25 0 0 0 16 39.75V36.5h16v3.25A3.25 3.25 0 0 0 35.25 43h3.5A3.25 3.25 0 0 0 42 39.75v-17.5c0-1.84-1.17-3.408-2.807-3.999l-.5-1.751h2.057a1.25 1.25 0 1 0 0-2.5h-2.771l-.991-3.467A6.25 6.25 0 0 0 30.978 6H16.674a6.25 6.25 0 0 0-6.07 4.763L9.81 14H7.25a1.25 1.25 0 1 0 0 2.5zm7.475-8H30.98a3.75 3.75 0 0 1 3.605 2.72L36.521 18H11.404l1.627-6.642A3.75 3.75 0 0 1 16.673 8.5m17.827 28h5v3.25a.75.75 0 0 1-.75.75h-3.5a.75.75 0 0 1-.75-.75zm-26 3.25V36.5h5v3.25a.75.75 0 0 1-.75.75h-3.5a.75.75 0 0 1-.75-.75M14 28a2 2 0 1 1 0-4a2 2 0 0 1 0 4m22-2a2 2 0 1 1-4 0a2 2 0 0 1 4 0m-15.75 2h7.5a1.25 1.25 0 1 1 0 2.5h-7.5a1.25 1.25 0 1 1 0-2.5"/></svg>',
+                              color: Colors.white,
                               size: 34,
                             ),
                           ),
@@ -300,67 +283,49 @@ class ProfilePage extends StatelessWidget {
                   SizedBox(
                     height: 30,
                   ),
-                  GestureDetector(
-                    onTap: (() {
-                      _authService.signOut();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AuthPage(),
-                        ),
-                      );
-                    }),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 56,
-                          width: 56,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(360),
-                          ),
-                          child: Icon(
-                            Icons.place_rounded,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 34,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            top: 15,
-                          ),
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          height: 56,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Logout",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Divider(
-                                height: 1,
-                                thickness: 0.5,
-                                color: Colors.grey[500],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
+              ),
+            ),
+            GestureDetector(
+              onTap: (() {
+                _authService.signOut();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AuthPage(),
+                  ),
+                );
+              }),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 20,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(
+                        top: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.red,
+                      ),
+                      height: 56,
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        "Logout",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
