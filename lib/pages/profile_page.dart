@@ -21,20 +21,64 @@ class ProfilePage extends StatelessWidget {
               padding: EdgeInsets.only(
                 left: 25,
                 right: 25,
-                top: 40,
+                top: 30,
               ),
-              margin: EdgeInsets.only(bottom: 30),
+              margin: EdgeInsets.only(bottom: 70),
               width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: Text(
-                  'Akun',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontFamily: "Kantumruy",
-                    fontWeight: FontWeight.bold,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'My Profile',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontFamily: "Kantumruy",
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: (() {
+                      _authService.signOut();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AuthPage(),
+                        ),
+                      );
+                    }),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.red,
+                      ),
+                      height: 45,
+                      child: Row(
+                        children: [
+                          Text(
+                            textAlign: TextAlign.center,
+                            "Logout",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Iconify(
+                            '<svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24"><path fill="#0077B6" d="M5 5h6c.55 0 1-.45 1-1s-.45-1-1-1H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h6c.55 0 1-.45 1-1s-.45-1-1-1H5z"/><path fill="#0077B6" d="m20.65 11.65l-2.79-2.79a.501.501 0 0 0-.86.35V11h-7c-.55 0-1 .45-1 1s.45 1 1 1h7v1.79c0 .45.54.67.85.35l2.79-2.79c.2-.19.2-.51.01-.7"/></svg>',
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             CircleAvatar(
@@ -174,13 +218,13 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 30,
+                          width: 15,
                         ),
                         Container(
                           padding: EdgeInsets.only(
                             top: 15,
                           ),
-                          width: MediaQuery.of(context).size.width * 0.55,
+                          width: MediaQuery.of(context).size.width * 0.60,
                           height: 56,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -246,13 +290,13 @@ class ProfilePage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 30,
+                          width: 15,
                         ),
                         Container(
                           padding: EdgeInsets.only(
                             top: 15,
                           ),
-                          width: MediaQuery.of(context).size.width * 0.55,
+                          width: MediaQuery.of(context).size.width * 0.60,
                           height: 56,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -284,48 +328,6 @@ class ProfilePage extends StatelessWidget {
                     height: 30,
                   ),
                 ],
-              ),
-            ),
-            GestureDetector(
-              onTap: (() {
-                _authService.signOut();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AuthPage(),
-                  ),
-                );
-              }),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(
-                        top: 15,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Colors.red,
-                      ),
-                      height: 56,
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        "Logout",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
