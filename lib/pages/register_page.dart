@@ -140,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(25.0),
+                padding: const EdgeInsets.symmetric(vertical: 25.0),
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         children: [
                           // Ride Share
                           const Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
+                            padding: const EdgeInsets.only(left: 45.0),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -186,163 +186,169 @@ class _RegisterPageState extends State<RegisterPage> {
                           const SizedBox(height: 60.0),
 
                           // white rounded box
-                          Container(
-                            height: 380,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 360,
-                                  padding: const EdgeInsets.all(15.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        spreadRadius: 0,
-                                        blurRadius: 3,
-                                        offset: Offset(
-                                            0, 3), // changes position of shadow
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: Container(
+                              height: 380,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 360,
+                                    padding: const EdgeInsets.all(15.0),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(20),
                                       ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        // login/register
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: widget.onTap,
-                                              child: Text(
-                                                'Login',
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                                  fontSize: 25,
-                                                ),
-                                              ),
-                                            ),
-                                            Column(
-                                              children: [
-                                                Text('Register',
-                                                    style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
-                                                      fontSize: 25,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    )),
-                                                const SizedBox(
-                                                  height: 5.0,
-                                                ),
-                                                Container(
-                                                  height: 3.0,
-                                                  width: 100.0,
-                                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey,
+                                          spreadRadius: 0,
+                                          blurRadius: 3,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          // login/register
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: widget.onTap,
+                                                child: Text(
+                                                  'Login',
+                                                  style: TextStyle(
                                                     color: Theme.of(context)
                                                         .colorScheme
                                                         .primary,
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
+                                                    fontSize: 25,
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10.0),
-
-                                        // username
-                                        MyTextField(
-                                          hintText: 'Username',
-                                          obscureText: false,
-                                          controller: usernameController,
-                                          prefixIcon: Icons.person,
-                                          errorText:
-                                              usernameError, // Pass errorText
-                                        ),
-                                        const SizedBox(height: 10.0),
-
-                                        // email
-                                        MyTextField(
-                                          hintText: 'Email',
-                                          obscureText: false,
-                                          controller: emailController,
-                                          prefixIcon: Icons.email_outlined,
-                                          errorText:
-                                              emailError, // Pass errorText
-                                        ),
-                                        const SizedBox(height: 10.0),
-
-                                        // password
-                                        MyTextField(
-                                          hintText: 'Password',
-                                          obscureText: true,
-                                          controller: passwordController,
-                                          prefixIcon: Icons.lock_outline,
-                                          errorText:
-                                              passwordError, // Pass errorText
-                                        ),
-                                        const SizedBox(height: 10.0),
-
-                                        // confirm password
-                                        MyTextField(
-                                          hintText: 'Confirm Password',
-                                          obscureText: true,
-                                          controller: confirmController,
-                                          prefixIcon: Icons.lock_outline,
-                                          errorText:
-                                              confirmPasswordError, // Pass errorText
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Colors.grey,
-                                                spreadRadius: 0,
-                                                blurRadius: 2,
-                                                offset: Offset(0,
-                                                    3), // changes position of shadow
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Text('Register',
+                                                      style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary,
+                                                        fontSize: 25,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      )),
+                                                  const SizedBox(
+                                                    height: 5.0,
+                                                  ),
+                                                  Container(
+                                                    height: 3.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                        Radius.circular(10.0),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                          child: MyButton(
-                                            text: "Sign Up",
-                                            onTap: registerUser,
+                                          const SizedBox(height: 10.0),
+
+                                          // username
+                                          MyTextField(
+                                            hintText: 'Username',
+                                            obscureText: false,
+                                            controller: usernameController,
+                                            prefixIcon: Icons.person,
+                                            errorText:
+                                                usernameError, // Pass errorText
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ],
+                                          const SizedBox(height: 10.0),
+
+                                          // email
+                                          MyTextField(
+                                            hintText: 'Email',
+                                            obscureText: false,
+                                            controller: emailController,
+                                            prefixIcon: Icons.email_outlined,
+                                            errorText:
+                                                emailError, // Pass errorText
+                                          ),
+                                          const SizedBox(height: 10.0),
+
+                                          // password
+                                          MyTextField(
+                                            hintText: 'Password',
+                                            obscureText: true,
+                                            controller: passwordController,
+                                            prefixIcon: Icons.lock_outline,
+                                            errorText:
+                                                passwordError, // Pass errorText
+                                          ),
+                                          const SizedBox(height: 10.0),
+
+                                          // confirm password
+                                          MyTextField(
+                                            hintText: 'Confirm Password',
+                                            obscureText: true,
+                                            controller: confirmController,
+                                            prefixIcon: Icons.lock_outline,
+                                            errorText:
+                                                confirmPasswordError, // Pass errorText
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Colors.grey,
+                                                  spreadRadius: 0,
+                                                  blurRadius: 2,
+                                                  offset: Offset(0,
+                                                      3), // changes position of shadow
+                                                ),
+                                              ],
+                                            ),
+                                            child: MyButton(
+                                              text: "Sign Up",
+                                              onTap: registerUser,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],

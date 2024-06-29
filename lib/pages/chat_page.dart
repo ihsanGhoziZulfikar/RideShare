@@ -127,6 +127,8 @@ class _ChatPageState extends State<ChatPage> {
 
     if (difference.inDays == 0) {
       return 'Today';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
     } else if (difference.inDays < 7) {
       return DateFormat.EEEE().format(timestamp);
     } else {
