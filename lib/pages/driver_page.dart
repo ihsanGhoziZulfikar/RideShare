@@ -266,255 +266,259 @@ class _DriverPageState extends State<DriverPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          currentPosition == null
-              ? const Center(child: CircularProgressIndicator())
-              : GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: currentPosition != null
-                      ? CameraPosition(
-                          target: currentPosition!,
-                          zoom: 14.5,
-                        )
-                      : const CameraPosition(
-                          target: sourceLocation,
-                          zoom: 14.5,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            currentPosition == null
+                ? const Center(child: CircularProgressIndicator())
+                : GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: currentPosition != null
+                        ? CameraPosition(
+                            target: currentPosition!,
+                            zoom: 14.5,
+                          )
+                        : const CameraPosition(
+                            target: sourceLocation,
+                            zoom: 14.5,
+                          ),
+                    markers: _markers.union({
+                      if (currentPosition != null)
+                        Marker(
+                          markerId: const MarkerId("current"),
+                          position: currentPosition!,
                         ),
-                  markers: _markers.union({
-                    if (currentPosition != null)
                       Marker(
-                        markerId: const MarkerId("current"),
-                        position: currentPosition!,
+                        markerId: const MarkerId("source"),
+                        position: sourceLocation,
                       ),
-                    Marker(
-                      markerId: const MarkerId("source"),
-                      position: sourceLocation,
-                    ),
-                    Marker(
-                      markerId: const MarkerId("destination"),
-                      position: destination,
-                    ),
-                  }),
-                  polylines: {
-                    Polyline(
-                      polylineId: const PolylineId("route"),
-                      points: polylineCoordinates,
-                      color: const Color(0xFF7B61FF),
-                      width: 6,
-                    ),
-                  },
-                ),
-          Positioned(
-            right: 0,
-            left: 0,
-            top: 25,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                    hintText: 'Masukan destinasi',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.search,
-                        color: Color(0xff0077B6),
+                      Marker(
+                        markerId: const MarkerId("destination"),
+                        position: destination,
                       ),
-                      onPressed: _searchDestination,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide
-                          .none, // Optional: Remove the border if you want to use the container's decoration
-                    ),
+                    }),
+                    polylines: {
+                      Polyline(
+                        polylineId: const PolylineId("route"),
+                        points: polylineCoordinates,
+                        color: const Color(0xFF7B61FF),
+                        width: 6,
+                      ),
+                    },
                   ),
-                  onSubmitted: (value) => _searchDestination(),
+            Positioned(
+              right: 0,
+              left: 0,
+              top: 10,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    style: TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      hintText: 'Masukan destinasi',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.search,
+                          color: Color(0xff0077B6),
+                        ),
+                        onPressed: _searchDestination,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide
+                            .none, // Optional: Remove the border if you want to use the container's decoration
+                      ),
+                    ),
+                    onSubmitted: (value) => _searchDestination(),
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            right: 0,
-            left: 0,
-            bottom: 0,
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 150),
-              curve: Curves.easeInOut,
-              width: MediaQuery.of(context).size.width,
-              height: _isMarkerSelected
-                  ? MediaQuery.of(context).size.height / 3.2
-                  : 0,
-              alignment: Alignment.bottomCenter,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 20,
-                    offset: Offset.zero,
-                    color: Colors.grey.withOpacity(0.5),
+            Positioned(
+              right: 0,
+              left: 0,
+              bottom: 0,
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 150),
+                curve: Curves.easeInOut,
+                width: MediaQuery.of(context).size.width,
+                height: _isMarkerSelected
+                    ? MediaQuery.of(context).size.height / 3.2
+                    : 0,
+                alignment: Alignment.bottomCenter,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
                   ),
-                ],
-              ),
-              child: _isMarkerSelected
-                  ? Column(
-                      children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
-                          ),
-                          title: Text(
-                            _selectedMarkerTitle,
-                            style: TextStyle(
-                                fontFamily: 'Kantumruy',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Icon(Icons.directions),
-                              SizedBox(width: 4),
-                              Text(
-                                _selectedMarkerSubtitle,
-                                style: TextStyle(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 20,
+                      offset: Offset.zero,
+                      color: Colors.grey.withOpacity(0.5),
+                    ),
+                  ],
+                ),
+                child: _isMarkerSelected
+                    ? Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                            ),
+                            title: Text(
+                              _selectedMarkerTitle,
+                              style: TextStyle(
                                   fontFamily: 'Kantumruy',
-                                ),
-                              ),
-                            ],
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.message),
-                                onPressed: () {
-                                  if (_selectedMarkerEmail != null &&
-                                      _selectedMarkerId != null) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ChatPage(
-                                          receiverEmail: _selectedMarkerEmail!,
-                                          receiverId: _selectedMarkerId!,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.call),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Divider(
-                            thickness: 0.3,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 1,
-                                  spreadRadius: 1,
-                                  offset: Offset(0, 1),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            subtitle: Row(
+                              children: [
+                                Icon(Icons.directions),
+                                SizedBox(width: 4),
+                                Text(
+                                  _selectedMarkerSubtitle,
+                                  style: TextStyle(
+                                    fontFamily: 'Kantumruy',
+                                  ),
                                 ),
                               ],
                             ),
-                            child: ListTile(
-                              title: Text(
-                                'Email',
-                                style: TextStyle(
-                                  fontFamily: 'Kantumruy',
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.message),
+                                  onPressed: () {
+                                    if (_selectedMarkerEmail != null &&
+                                        _selectedMarkerId != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatPage(
+                                            receiverEmail:
+                                                _selectedMarkerEmail!,
+                                            receiverId: _selectedMarkerId!,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
-                              ),
-                              subtitle: Text(
-                                _selectedMarkerEmail ?? '',
-                                style: TextStyle(
-                                  fontFamily: 'Kantumruy',
+                                IconButton(
+                                  icon: Icon(Icons.call),
+                                  onPressed: () {},
                                 ),
-                              ),
+                              ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0, vertical: 8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Notification'),
-                                    content: Text(
-                                        'Sekarang $_passengerName menjadi penumpang mu.'),
-                                    actions: [
-                                      TextButton(
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.white),
-                                        ),
-                                        child: Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          _isMarkerSelected = false;
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Divider(
+                              thickness: 0.3,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
                             child: Container(
-                              width: double.infinity,
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(0, 119, 182, 0.25),
-                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(4.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 1,
+                                    spreadRadius: 1,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Center(
-                                  child: Text(
-                                    'Terima Kuy',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xfff0077B6)),
+                              child: ListTile(
+                                title: Text(
+                                  'Email',
+                                  style: TextStyle(
+                                    fontFamily: 'Kantumruy',
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  _selectedMarkerEmail ?? '',
+                                  style: TextStyle(
+                                    fontFamily: 'Kantumruy',
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  : SizedBox.shrink(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Notification'),
+                                      content: Text(
+                                          'Sekarang $_passengerName menjadi penumpang mu.'),
+                                      actions: [
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.white),
+                                          ),
+                                          child: Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            _isMarkerSelected = false;
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 119, 182, 0.25),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Center(
+                                    child: Text(
+                                      'Terima Kuy',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xfff0077B6)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : SizedBox.shrink(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

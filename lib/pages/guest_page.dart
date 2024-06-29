@@ -85,9 +85,11 @@ class _GuestPageState extends State<GuestPage> {
         _markers.add(
           Marker(
             markerId: MarkerId('currentLocation'),
-            position: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+            position:
+                LatLng(currentLocation.latitude!, currentLocation.longitude!),
             infoWindow: InfoWindow(title: 'Current Location'),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+            icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueAzure),
           ),
         );
       });
@@ -103,7 +105,10 @@ class _GuestPageState extends State<GuestPage> {
         var userData = doc.data() as Map<String, dynamic>;
         print("User data: $userData");
 
-        if (userData.containsKey('lat') && userData.containsKey('lng') && userData.containsKey('status') && userData['status'] == 'driver') {
+        if (userData.containsKey('lat') &&
+            userData.containsKey('lng') &&
+            userData.containsKey('status') &&
+            userData['status'] == 'driver') {
           double? lat = _parseDouble(userData['lat']);
           double? lng = _parseDouble(userData['lng']);
 
@@ -116,11 +121,13 @@ class _GuestPageState extends State<GuestPage> {
                 Marker(
                   markerId: MarkerId(doc.id),
                   position: userLocation,
-                  infoWindow: InfoWindow(title: userData['username'] ?? 'Unknown'),
+                  infoWindow:
+                      InfoWindow(title: userData['username'] ?? 'Unknown'),
                   onTap: () {
                     setState(() {
                       _selectedMarkerTitle = userData['username'] ?? 'Unknown';
-                      _selectedMarkerSubtitle = userData['destination'] ?? 'Unknown';
+                      _selectedMarkerSubtitle =
+                          userData['destination'] ?? 'Unknown';
                       _selectedMarkerEmail = userData['email'];
                       _selectedMarkerId = doc.id;
                       _isMarkerSelected = true;
@@ -253,7 +260,9 @@ class _GuestPageState extends State<GuestPage> {
               duration: Duration(milliseconds: 150),
               curve: Curves.easeInOut,
               width: MediaQuery.of(context).size.width,
-              height: _isMarkerSelected ? MediaQuery.of(context).size.height / 3.2 : 0,
+              height: _isMarkerSelected
+                  ? MediaQuery.of(context).size.height / 3.2
+                  : 0,
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -274,11 +283,15 @@ class _GuestPageState extends State<GuestPage> {
                       children: [
                         ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage('https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                            backgroundImage: NetworkImage(
+                                'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
                           ),
                           title: Text(
                             _selectedMarkerTitle,
-                            style: TextStyle(fontFamily: 'Kantumruy', fontWeight: FontWeight.bold, fontSize: 18),
+                            style: TextStyle(
+                                fontFamily: 'Kantumruy',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
                           ),
                           subtitle: Row(
                             children: [
@@ -300,7 +313,8 @@ class _GuestPageState extends State<GuestPage> {
                               IconButton(
                                 icon: Icon(Icons.message),
                                 onPressed: () {
-                                  if (_selectedMarkerEmail != null && _selectedMarkerId != null) {
+                                  if (_selectedMarkerEmail != null &&
+                                      _selectedMarkerId != null) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -327,7 +341,8 @@ class _GuestPageState extends State<GuestPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -342,7 +357,9 @@ class _GuestPageState extends State<GuestPage> {
                               ],
                             ),
                             child: ListTile(
-                              leading: Image.network('https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', width: 50),
+                              leading: Image.network(
+                                  'https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                                  width: 50),
                               title: Text('E 3536 WR'),
                               subtitle: Text('BMW X1'),
                             ),
@@ -352,7 +369,8 @@ class _GuestPageState extends State<GuestPage> {
                           height: 10,
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 8.0),
                           child: GestureDetector(
                             onTap: _sendRequestToDriver,
                             child: Container(
@@ -366,7 +384,10 @@ class _GuestPageState extends State<GuestPage> {
                                 child: Center(
                                   child: Text(
                                     'Nebeng Kuy',
-                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xfff0077B6)),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xfff0077B6)),
                                   ),
                                 ),
                               ),
