@@ -64,13 +64,13 @@ class UsersListPage extends StatelessWidget {
     if (userData['email'] != _authService.getCurrentUser()!.email)
       return ListTile(
         leading: Icon(Icons.person),
-        title: Text(userData['email']),
+        title: Text(userData['username']),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ChatPage(
-                receiverEmail: userData['email'],
+                receiverEmail: userData['username'],
                 receiverId: userData['uid'],
               ),
             ),

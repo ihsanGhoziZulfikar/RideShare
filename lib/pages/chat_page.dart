@@ -77,44 +77,46 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 20.0,
-              left: 10,
-              bottom: 15,
-            ),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back_rounded,
-                    size: 30,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20.0,
+                left: 10,
+                bottom: 15,
+              ),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_rounded,
+                      size: 30,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  widget.receiverEmail,
-                  style: TextStyle(
-                    fontFamily: 'Kantumruy',
-                    fontSize: 18,
-                    color: Colors.black,
+                  SizedBox(
+                    width: 10,
                   ),
-                ),
-              ],
+                  Text(
+                    widget.receiverEmail,
+                    style: TextStyle(
+                      fontFamily: 'Kantumruy',
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: _buildMessageList(),
-          ),
-          _buildUserInput(),
-        ],
+            Expanded(
+              child: _buildMessageList(),
+            ),
+            _buildUserInput(),
+          ],
+        ),
       ),
     );
   }

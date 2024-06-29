@@ -23,8 +23,10 @@ class _DriverPageState extends State<DriverPage> {
   late GoogleMapController _mapController;
   StreamSubscription<QuerySnapshot>? _requestSubscription;
 
-  static const LatLng sourceLocation = LatLng(-6.862417460687757, 107.59372402873836);
-  static const LatLng destination = LatLng(-6.889144835635328, 107.5959113186077);
+  static const LatLng sourceLocation =
+      LatLng(-6.862417460687757, 107.59372402873836);
+  static const LatLng destination =
+      LatLng(-6.889144835635328, 107.5959113186077);
 
   List<LatLng> polylineCoordinates = [];
   bool _locationPermissionGranted = false;
@@ -97,7 +99,12 @@ class _DriverPageState extends State<DriverPage> {
   Future<void> _listenForRequests() async {
     final currentUser = FirebaseAuth.instance.currentUser;
 
-    _requestSubscription = FirebaseFirestore.instance.collection('Requests').where('driverId', isEqualTo: currentUser?.uid).where('status', isEqualTo: 'pending').snapshots().listen((querySnapshot) {
+    _requestSubscription = FirebaseFirestore.instance
+        .collection('Requests')
+        .where('driverId', isEqualTo: currentUser?.uid)
+        .where('status', isEqualTo: 'pending')
+        .snapshots()
+        .listen((querySnapshot) {
       for (var docChange in querySnapshot.docChanges) {
         if (docChange.type == DocumentChangeType.added) {
           var request = docChange.doc.data() as Map<String, dynamic>;
@@ -112,7 +119,8 @@ class _DriverPageState extends State<DriverPage> {
 
   Future<String> getCityName(double latitude, double longitude) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
       if (placemarks.isNotEmpty) {
         return placemarks.first.locality ?? 'Unknown';
       }
@@ -123,11 +131,17 @@ class _DriverPageState extends State<DriverPage> {
   }
 
   void _showNewRequestDialog(Map<String, dynamic> request) {
-    FirebaseFirestore.instance.collection('Users').doc(request['passengerId']).get().then((userData) async {
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(request['passengerId'])
+        .get()
+        .then((userData) async {
       if (userData.exists) {
         String passengerUsername = userData['username'];
-        double passengerLat = double.tryParse(userData['lat'].toString()) ?? 0.0;
-        double passengerLng = double.tryParse(userData['lng'].toString()) ?? 0.0;
+        double passengerLat =
+            double.tryParse(userData['lat'].toString()) ?? 0.0;
+        double passengerLng =
+            double.tryParse(userData['lng'].toString()) ?? 0.0;
         String cityName = await getCityName(passengerLat, passengerLng);
 
         print('Passenger data: Username: $passengerUsername');
@@ -138,34 +152,43 @@ class _DriverPageState extends State<DriverPage> {
             return AlertDialog(
               title: Text('New Ride Request'),
               content: SingleChildScrollView(
-                child: Text('Kamu memiliki permintaan Rideshare baru dari penumpang $passengerUsername. Location: $cityName'),
+                child: Text(
+                    'Kamu memiliki permintaan Rideshare baru dari penumpang $passengerUsername. Location: $cityName'),
               ),
               actions: [
                 TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white)),
                   onPressed: () async {
                     Navigator.of(context).pop();
 
                     try {
-                      final docSnapshot = await FirebaseFirestore.instance.collection('Requests').doc(request['id']).get();
+                      final docSnapshot = await FirebaseFirestore.instance
+                          .collection('Requests')
+                          .doc(request['id'])
+                          .get();
                       if (docSnapshot.exists) {
-                        await FirebaseFirestore.instance.collection('Requests').doc(request['id']).update({
-                          'status': 'seen'
-                        });
+                        await FirebaseFirestore.instance
+                            .collection('Requests')
+                            .doc(request['id'])
+                            .update({'status': 'seen'});
 
                         setState(() {
                           _markers.add(
                             Marker(
-                              markerId: MarkerId('guest_${request['passengerId']}'),
+                              markerId:
+                                  MarkerId('guest_${request['passengerId']}'),
                               position: LatLng(passengerLat, passengerLng),
                               infoWindow: InfoWindow(
                                 title: "Guest: $passengerUsername",
                               ),
-                              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                              icon: BitmapDescriptor.defaultMarkerWithHue(
+                                  BitmapDescriptor.hueBlue),
                               onTap: () {
                                 setState(() {
                                   _selectedMarkerTitle = passengerUsername;
-                                  _selectedMarkerSubtitle = userData['destination'] ?? 'Unknown';
+                                  _selectedMarkerSubtitle =
+                                      userData['destination'] ?? 'Unknown';
                                   _selectedMarkerEmail = userData['email'];
                                   _selectedMarkerId = request['passengerId'];
                                   _isMarkerSelected = true;
@@ -202,14 +225,19 @@ class _DriverPageState extends State<DriverPage> {
       List<Location> locations = await locationFromAddress(query);
       if (locations.isNotEmpty) {
         Location location = locations.first;
-        LatLng destinationLatLng = LatLng(location.latitude, location.longitude);
+        LatLng destinationLatLng =
+            LatLng(location.latitude, location.longitude);
 
-        String cityName = await getCityName(location.latitude, location.longitude);
+        String cityName =
+            await getCityName(location.latitude, location.longitude);
 
         final currentUser = FirebaseAuth.instance.currentUser;
         if (currentUser != null) {
           try {
-            await FirebaseFirestore.instance.collection('Users').doc(currentUser.uid).update({
+            await FirebaseFirestore.instance
+                .collection('Users')
+                .doc(currentUser.uid)
+                .update({
               'destination': cityName,
             });
             print('Destination updated in Firestore: $cityName');
@@ -226,7 +254,8 @@ class _DriverPageState extends State<DriverPage> {
               infoWindow: InfoWindow(title: 'Destination'),
             ),
           );
-          _mapController.animateCamera(CameraUpdate.newLatLng(destinationLatLng));
+          _mapController
+              .animateCamera(CameraUpdate.newLatLng(destinationLatLng));
         });
       }
     } catch (e) {
@@ -281,7 +310,8 @@ class _DriverPageState extends State<DriverPage> {
             left: 0,
             top: 25,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -301,7 +331,8 @@ class _DriverPageState extends State<DriverPage> {
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide.none, // Optional: Remove the border if you want to use the container's decoration
+                      borderSide: BorderSide
+                          .none, // Optional: Remove the border if you want to use the container's decoration
                     ),
                   ),
                   onSubmitted: (value) => _searchDestination(),
@@ -317,7 +348,9 @@ class _DriverPageState extends State<DriverPage> {
               duration: Duration(milliseconds: 150),
               curve: Curves.easeInOut,
               width: MediaQuery.of(context).size.width,
-              height: _isMarkerSelected ? MediaQuery.of(context).size.height / 3.2 : 0,
+              height: _isMarkerSelected
+                  ? MediaQuery.of(context).size.height / 3.2
+                  : 0,
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -338,11 +371,15 @@ class _DriverPageState extends State<DriverPage> {
                       children: [
                         ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage('https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
+                            backgroundImage: NetworkImage(
+                                'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'),
                           ),
                           title: Text(
                             _selectedMarkerTitle,
-                            style: TextStyle(fontFamily: 'Kantumruy', fontWeight: FontWeight.bold, fontSize: 18),
+                            style: TextStyle(
+                                fontFamily: 'Kantumruy',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
                           ),
                           subtitle: Row(
                             children: [
@@ -362,7 +399,8 @@ class _DriverPageState extends State<DriverPage> {
                               IconButton(
                                 icon: Icon(Icons.message),
                                 onPressed: () {
-                                  if (_selectedMarkerEmail != null && _selectedMarkerId != null) {
+                                  if (_selectedMarkerEmail != null &&
+                                      _selectedMarkerId != null) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -389,7 +427,8 @@ class _DriverPageState extends State<DriverPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -420,7 +459,8 @@ class _DriverPageState extends State<DriverPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 8.0),
                           child: GestureDetector(
                             onTap: () {
                               showDialog(
@@ -428,11 +468,14 @@ class _DriverPageState extends State<DriverPage> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text('Notification'),
-                                    content: Text('Sekarang $_passengerName menjadi penumpang mu.'),
+                                    content: Text(
+                                        'Sekarang $_passengerName menjadi penumpang mu.'),
                                     actions: [
                                       TextButton(
                                         style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(Colors.white),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.white),
                                         ),
                                         child: Text('OK'),
                                         onPressed: () {
@@ -456,7 +499,10 @@ class _DriverPageState extends State<DriverPage> {
                                 child: Center(
                                   child: Text(
                                     'Terima Kuy',
-                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xfff0077B6)),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xfff0077B6)),
                                   ),
                                 ),
                               ),
@@ -495,7 +541,8 @@ class _DriverPageState extends State<DriverPage> {
 
     locationController.onLocationChanged.listen(
       (loc.LocationData currentLocation) async {
-        if (currentLocation.latitude != null && currentLocation.longitude != null) {
+        if (currentLocation.latitude != null &&
+            currentLocation.longitude != null) {
           if (mounted) {
             setState(() {
               currentPosition = LatLng(
@@ -508,11 +555,15 @@ class _DriverPageState extends State<DriverPage> {
           final currentUser = FirebaseAuth.instance.currentUser;
           if (currentUser != null) {
             try {
-              await FirebaseFirestore.instance.collection('Users').doc(currentUser.uid).update({
+              await FirebaseFirestore.instance
+                  .collection('Users')
+                  .doc(currentUser.uid)
+                  .update({
                 'lat': currentLocation.latitude,
                 'lng': currentLocation.longitude,
               });
-              print('Location updated in Firestore: (${currentLocation.latitude}, ${currentLocation.longitude})');
+              print(
+                  'Location updated in Firestore: (${currentLocation.latitude}, ${currentLocation.longitude})');
             } catch (e) {
               print('Error updating location in Firestore: $e');
             }
